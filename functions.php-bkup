@@ -1,0 +1,325 @@
+<?php
+// Exit if accessed directly
+if (!defined('ABSPATH')) exit;
+//include files]
+include_once get_stylesheet_directory() . '/functions/scripts.php';
+include_once get_stylesheet_directory() . '/functions/shortcodes.php';
+include_once get_stylesheet_directory() . '/functions/custom-post-types.php';
+include_once get_stylesheet_directory() . '/functions/metaboxes.php';
+include_once get_stylesheet_directory() . '/functions/ajaxs.php';
+// Actions & Hooks
+//after setup theme hook
+add_action('after_setup_theme', 'my_theme_add_woocommerce_support');
+// to add scripts
+add_action('wp_enqueue_scripts', 'child_theme_configurator_css', 100);
+add_filter('locale_stylesheet_uri', 'chld_thm_cfg_locale_css');
+// to add custom post type
+add_action('init', 'socks_custom_post_type');
+//rewrite url
+add_action('init', 'custom_rewrite_rules');
+//add query var
+add_filter('query_vars', 'socks_query_vars');
+//template redirect
+add_action('template_redirect', 'custom_template_redirect');
+//logout hook
+add_action('wp_logout', 'redirect_after_logout', 2);
+
+// Add theme support for WooCommerce
+function my_theme_add_woocommerce_support()
+{
+    add_theme_support('woocommerce');
+    flush_rewrite_rules();
+    //hide admin bar
+    if (!current_user_can('administrator') && !is_admin()) {
+        show_admin_bar(false);
+    }
+}
+
+
+// BEGIN ENQUEUE PARENT ACTION
+// AUTO GENERATED - Do not modify or remove comment markers above or below:
+
+if (!function_exists('chld_thm_cfg_locale_css')) :
+    function chld_thm_cfg_locale_css($uri)
+    {
+        if (empty($uri) && is_rtl() && file_exists(get_template_directory() . '/rtl.css'))
+            $uri = get_template_directory_uri() . '/rtl.css';
+        return $uri;
+    }
+endif;
+
+
+// END ENQUEUE PARENT ACTION
+
+
+// add_filter('wp_authenticate_user', function ($user) {
+//     if (get_user_meta($user->ID, 'user_flag', true) == 'active') {
+//         return $user;
+//     }
+//     return new WP_Error('Account is Not Active!');
+// }, 10, 2);
+
+function redirect_after_logout($user_id)
+{
+    $current_user = get_user_by('id', $user_id);
+    $roles        = $current_user->roles;
+    if (!in_array('administrator', $roles)) {
+        wp_safe_redirect(site_url('/login/'));
+        exit;
+    }
+}
+
+
+//create role:
+
+
+// Check if the 'reseller' role doesn't exist
+if (!get_role('reseller')) {
+    add_role('reseller', __('Reseller'), array(
+        'read' => true,
+        'edit_posts' => true,
+        'upload_files' => true,
+        'edit_published_posts' => true,
+        'publish_posts' => true,
+        'delete_published_posts' => true,
+        'delete_posts' => true,
+        'create_posts' => true,
+        'manage_categories' => true,
+        'manage_woocommerce' => true, // WooCommerce capabilities
+        'view_woocommerce_reports' => true, // View WooCommerce reports
+        'edit_product' => true,
+        'read_product' => true,
+        'delete_product' => true,
+        'edit_products' => true,
+        'edit_others_products' => true,
+        'publish_products' => true,
+        'read_private_products' => true,
+        'delete_products' => true,
+        'delete_private_products' => true,
+        'delete_published_products' => true,
+        'delete_others_products' => true,
+        'edit_private_products' => true,
+        'edit_published_products' => true,
+        'create_products' => true,
+        // Add more capabilities based on your requirements
+    ));
+}
+
+
+// Register the query variable
+function socks_query_vars($vars)
+{
+    $vars[] = 'reseller_username';
+    $vars[] = 'reseller_dashboard';
+    $vars[] = 'reseller_shopsettings';
+    $vars[] = 'reseller_sales';
+    $vars[] = 'reseller_edit_profile';
+    $vars[] = 'user_change_password';
+    $vars[] = 'team_register';
+    $vars[] = 'team_members';
+    return $vars;
+}
+
+// Redirect to custom template when reseller_username is present
+function custom_template_redirect()
+{
+    global $wp_query;
+
+    $reseller_username = $wp_query->get('reseller_username');
+    $reseller_dashboard = $wp_query->get('reseller_dashboard');
+    $reseller_shopsettings = $wp_query->get('reseller_shopsettings');
+    $reseller_sales = $wp_query->get('reseller_sales');
+    $reseller_edit_profile = $wp_query->get('reseller_edit_profile');
+    $user_change_password = $wp_query->get('user_change_password');
+    $team_register = $wp_query->get('team_register');
+    $team_members = $wp_query->get('team_members');
+    $current_user = wp_get_current_user();
+    if ($reseller_username) {
+        // Specify the path to your custom reseller profile template file
+        $custom_template = get_stylesheet_directory() . '/page-templates/reseller/reseller-profile.php';
+
+        if (file_exists($custom_template)) {
+            include $custom_template;
+            exit();  // Make sure to exit after including the template
+        }
+    } elseif ($reseller_dashboard) {
+        // Specify the path to your custom reseller dashboard template file
+        $dashboard_template = get_stylesheet_directory() . '/page-templates/dashboard.php';
+
+        if (file_exists($dashboard_template)) {
+            include $dashboard_template;
+            exit();  // Make sure to exit after including the template
+        }
+    } elseif ($reseller_shopsettings) {
+        // Specify the path to your custom reseller dashboard template file
+        $shop_settings_template = get_stylesheet_directory() . '/page-templates/reseller/reseller-shop-settings.php';
+
+        if (file_exists($shop_settings_template)) {
+            include $shop_settings_template;
+            exit();  // Make sure to exit after including the template
+        }
+    } elseif ($reseller_sales) {
+        // Specify the path to your custom reseller dashboard template file
+        $reseller_sales_tempalte = get_stylesheet_directory() . '/page-templates/reseller/reseller-sales.php';
+
+        if (file_exists($reseller_sales_tempalte)) {
+            include $reseller_sales_tempalte;
+            exit();  // Make sure to exit after including the template
+        }
+    } elseif ($reseller_edit_profile) {
+        // Specify the path to your custom reseller dashboard template file
+        $reseller_profile_edit_tempalte = get_stylesheet_directory() . '/page-templates/reseller/reseller-edit-profile.php';
+
+        if (file_exists($reseller_profile_edit_tempalte)) {
+            include $reseller_profile_edit_tempalte;
+            exit();  // Make sure to exit after including the template
+        }
+    } elseif ($user_change_password) {
+        // Specify the path to your custom reseller dashboard template file
+        $user_change_password_tempalte = get_stylesheet_directory() . '/page-templates/change-password.php';
+
+        if (file_exists($user_change_password_tempalte)) {
+            include $user_change_password_tempalte;
+            exit();  // Make sure to exit after including the template
+        }
+    } elseif ($team_members) {
+        // Specify the path to your custom team register template file
+        $team_members_template = get_stylesheet_directory() . '/page-templates/reseller/team-members.php';
+
+        if (file_exists($team_members_template)) {
+            include $team_members_template;
+            exit();  // Make sure to exit after including the template
+        }
+    } elseif ($team_register) {
+        // Specify the path to your custom team register template file
+        $team_register_template = get_stylesheet_directory() . '/page-templates/reseller/team-register.php';
+
+        if (file_exists($team_register_template)) {
+            include $team_register_template;
+            exit();  // Make sure to exit after including the template
+        }
+    }
+}
+
+// Custom rewrite rules for Polylang integration
+function custom_rewrite_rules()
+{
+    // Get active languages from Polylang
+    $active_languages = pll_languages_list(array('fields' => 'slug'));
+
+    // Generate rewrite rules for each active language
+    foreach ($active_languages as $lang) {
+        // For the default language, use a simplified rule without appending the language code
+        $reseller_base = ($lang === pll_default_language()) ? 'reseller' : $lang . '/reseller';
+        $rule = "^$reseller_base/([^/]+)/?$";
+        add_rewrite_rule($rule, 'index.php?lang=' . $lang . '&reseller_username=$matches[1]', 'top');
+
+        // Add rewrite rule for the reseller-dashboard
+        $dashboard_base = ($lang === pll_default_language()) ? 'user/dashboard' : $lang . '/user/dashboard';
+        $dashboard_rule = "^$dashboard_base/?$";
+        add_rewrite_rule($dashboard_rule, 'index.php?lang=' . $lang . '&reseller_dashboard=1', 'top');
+        //shop settings rule for add rewrite
+        $shopsettings_base = ($lang === pll_default_language()) ? 'user/shop-settings' : $lang . '/user/shop-settings';
+        $shopsettings_rule = "^$shopsettings_base/?$";
+        add_rewrite_rule($shopsettings_rule, 'index.php?lang=' . $lang . '&reseller_shopsettings=1', 'top');
+        //sale rule for add rewrite
+        $orders_base = ($lang === pll_default_language()) ? 'user/orders' : $lang . '/user/orders';
+        $orders_rule = "^$orders_base/?$";
+        add_rewrite_rule($orders_rule, 'index.php?lang=' . $lang . '&reseller_sales=1', 'top');
+        //Profiel edit rule for add rewrite
+        $orders_base = ($lang === pll_default_language()) ? 'user/edit-profile' : $lang . '/user/edit-profile';
+        $orders_rule = "^$orders_base/?$";
+        add_rewrite_rule($orders_rule, 'index.php?lang=' . $lang . '&reseller_edit_profile=1', 'top');
+        //Change Password rule for add rewrite
+        $orders_base = ($lang === pll_default_language()) ? 'user/change-password' : $lang . '/user/change-password';
+        $orders_rule = "^$orders_base/?$";
+        add_rewrite_rule($orders_rule, 'index.php?lang=' . $lang . '&user_change_password=1', 'top');
+        //Team Members list rule for add rewrite
+        $team_members = ($lang === pll_default_language()) ? 'user/team-members' : $lang . 'user/team-members';
+        $team_members_rule = "^$team_members/?$";
+        add_rewrite_rule($team_members_rule, 'index.php?lang=' . $lang . '&team_members=1', 'top');
+        //Team Register rule for add rewrite
+        $team_register = ($lang === pll_default_language()) ? 'user/team-register' : $lang . 'user/team-register';
+        $team_register_rule = "^$team_register/?$";
+        add_rewrite_rule($team_register_rule, 'index.php?lang=' . $lang . '&team_register=1', 'top');
+    }
+}
+
+
+
+// add_action('woocommerce_cart_calculate_fees', 'change_currency_on_country_update');
+
+// function change_currency_on_country_update() {
+//     if (is_admin() && !defined('DOING_AJAX')) {
+//         return;
+//     }
+
+//     $country = WC()->customer->get_billing_country();
+
+//     if (class_exists('WOOMULTI_CURRENCY_F_Data')) {
+//         $wmc = WOOMULTI_CURRENCY_F_Data::get_ins();
+//         switch ($country) {
+//             case 'CA':
+//                 $wmc->set_current_currency('CAD');
+//                 break;
+//             default:
+//                 $wmc->set_current_currency('USD');
+//         }
+// 		var_dump($wmc);
+// 		exit();
+//     }
+// }
+
+
+
+add_filter('add_to_cart_url', 'wpa104168_tadd_special_payment_link');
+
+function wpa104168_tadd_special_payment_link($link)
+{
+    global $product;
+
+    $link = 'http://wordpress.org/';
+    $product->product_type = 'modified';
+    // If the stock quantity is greater than 50, modify the link
+    if ($product->get_stock_quantity() > 50) {
+    }
+
+    return $link;
+}
+
+
+
+// Add this code to your theme's functions.php file or a custom plugin.
+
+function check_reseller_id_before_cart()
+{
+    // Check if the reseller_id query parameter is present
+    $reseller_id = isset($_GET['resellerid']) ? sanitize_text_field($_GET['resellerid']) : '';
+
+    if (empty($reseller_id)) {
+        // If reseller_id is not present, show an error message
+        wc_add_notice(__('Please provide a valid reseller ID.', 'hello-elementor'), 'error');
+    } else {
+        // If reseller_id is present, add it to the cart data
+
+        // Get cart contents
+        $cart = WC()->cart->get_cart();
+
+        // Check if the item is already in the cart
+        $reseller_item_in_cart = false;
+
+        foreach ($cart as $cart_item) {
+            if (isset($cart_item['reseller_id']) && $cart_item['reseller_id'] === $reseller_id) {
+                $reseller_item_in_cart = true;
+                break;
+            }
+        }
+
+        // If the reseller item is not already in the cart, add it
+        if (!$reseller_item_in_cart) {
+            // Add your product to the cart, you might need to adjust product ID, quantity, etc.
+            WC()->cart->add_to_cart(123, 1, 0, array(), array('reseller_id' => $reseller_id));
+        }
+    }
+}
+add_action('woocommerce_before_cart', 'check_reseller_id_before_cart');
