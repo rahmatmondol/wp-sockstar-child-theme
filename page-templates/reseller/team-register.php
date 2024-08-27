@@ -15,8 +15,11 @@ if (!is_user_logged_in()) {
     $team_name = isset($reseller_meta_data['team_name'][0]) ? $reseller_meta_data['team_name'][0] : '';
     $shop_name = isset($reseller_meta_data['shop_name'][0]) ? $reseller_meta_data['shop_name'][0] : '';
 
+
+
 ?>
     <div class="container-fluid user-dashboard">
+        
         <div class="row">
             <?php include_once get_stylesheet_directory() . '/page-templates/dashboard-sidebar.php'; ?>
             <div class="col-md-9 col-lg-10 ml-md-auto px-0">

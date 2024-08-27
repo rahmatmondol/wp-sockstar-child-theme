@@ -116,6 +116,8 @@ function shocks_user_registration()
         wp_send_json_error(array('message' => __('Password do not match.', 'hello-elementor')));
     }
 
+    $team_name == '' ? $team_name = $fullName : $team_name;
+
     // Create a user with the 'reseller' role
     $user_id = wp_insert_user(array(
         'user_login' => sanitize_title($team_name),
