@@ -62,7 +62,7 @@ if (!is_user_logged_in()) {
                                             <td><?php echo $user->user_email; ?></td>
                                             <td><?php echo $user->user_login; ?></td>
                                             <td>
-                                                <a href="<?php echo site_url('reseller/' . $current_user->user_login . '?refid=' . $user->ID); ?>">Click Here</a>
+                                                <a target="_blank" href="<?php echo site_url('lag/' . $current_user->user_login . '/' . $user->user_login); ?>">Click Here</a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
