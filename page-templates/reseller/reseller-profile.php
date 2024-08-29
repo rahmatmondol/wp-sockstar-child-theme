@@ -6,10 +6,16 @@ Template Name: Reseller Profile
 get_header();
 
 $reseller_username = get_query_var('reseller_username');
+$member_username = get_query_var('member_username');
+
+$member_user = get_user_by('login', $member_username);
 $reseller_user = get_user_by('login', $reseller_username);
+
+
 
 if ($reseller_user) {
     $reseller_id = $reseller_user->ID;
+    
     $user_meta_data = get_user_meta($reseller_id);
     $team_name = isset($user_meta_data['team_name'][0]) ? $user_meta_data['team_name'][0] : '';
     $shop_name = isset($user_meta_data['shop_name'][0]) ? $user_meta_data['shop_name'][0] : '';
@@ -26,6 +32,7 @@ if ($reseller_user) {
     $shop_cover_photo_img = wp_get_attachment_image_url($shop_cover_photo_id, 'full');
 
 ?>
+
     <style>
         #u-name {
             color: <?php echo $bgColorProfile; ?>;
@@ -65,9 +72,12 @@ if ($reseller_user) {
                     <img src="<?php echo !empty($shop_profile_image) ? $shop_profile_image : 'https://imagizer.imageshack.com/img921/3072/rqkhIb.jpg" class="img-fluid rounded-circle'; ?>" srcset="<?php echo !empty($shop_profile_image_scrsrc) ? $shop_profile_image_scrsrc : ''; ?>" alt="Banner image" class="img-fluid">
 
                 </div>
-                <div id="u-name"><?php echo esc_html($team_name); ?></div>
+                <div id="u-name"><?php echo esc_html($team_name); ?></div><br>
+
             </div>
         </div>
+
+
         <div class="row justify-content-center">
             <div class="col-md-10 col-12 pt-4 text-center px-4">
                 <p><?php echo __($shop_description, 'hello-elementor'); ?></p>
@@ -129,17 +139,23 @@ if ($reseller_user) {
                                     } elseif (!$is_in_stock) {
                                         $sale_status = '<div class="tag bg-black">' . esc_html($out_of_stock_translation) . '</div>';
                                     }
+
+                                    if($member_user){
+                                        $id = $member_user->ID;
+                                    }else{
+                                        $id = $reseller_id;
+                                    }
                                 ?>
 
                                     <div class="col-lg-3 col-sm-6 d-flex flex-column align-items-center justify-content-center product-item my-3">
                                         <div class="product">
-                                            <a class="sock-product-link-reseller" data-reseller-id="<?php echo $reseller_id; ?>" href="<?php the_permalink(); ?><?php echo '?resellerid=' . $reseller_id; ?>"><img src="<?php echo get_the_post_thumbnail_url(); ?>" alt=""></a>
+                                            <a class="sock-product-link-reseller" data-reseller-id="<?php echo $id; ?>" href="<?php the_permalink(); ?><?php echo '?resellerid=' . $id; ?>"><img src="<?php echo get_the_post_thumbnail_url(); ?>" alt=""></a>
                                             <!-- <ul class="d-flex align-items-center justify-content-center list-unstyled icons">
                                                 <li class="icon"><span class="fas fa-shopping-bag"></span></li>
                                             </ul> -->
                                         </div>
                                         <?php echo $sale_status; ?>
-                                        <div class="title pt-4 pb-1"><a class="sock-product-link-reseller" data-reseller-id="<?php echo $reseller_id; ?>" href="<?php the_permalink(); ?><?php echo '?resellerid=' . $reseller_id; ?>"><?php the_title(); ?></a></div>
+                                        <div class="title pt-4 pb-1"><a class="sock-product-link-reseller" data-reseller-id="<?php echo $id; ?>" href="<?php the_permalink(); ?><?php echo '?resellerid=' . $id; ?>"><?php the_title(); ?></a></div>
 
                                         <?php
                                         // Display reviews count and link

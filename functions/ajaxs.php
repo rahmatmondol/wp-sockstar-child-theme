@@ -116,14 +116,19 @@ function shocks_user_registration()
         wp_send_json_error(array('message' => __('Password do not match.', 'hello-elementor')));
     }
 
-    $team_name == '' ? $team_name = $fullName : $team_name;
+    // Check registration type is reseller or team member
+    if ($register_type == 'reseller') {
+        $user_login = $team_name;
+    } else {
+        $user_login = $fullName;
+    }
 
     // Create a user with the 'reseller' role
     $user_id = wp_insert_user(array(
-        'user_login' => sanitize_title($team_name),
+        'user_login' => sanitize_title($user_login),
         'user_email' => $email,
-        // 'user_pass' => wp_hash_password($password),
-        'user_pass' => $password,
+        'user_pass' => wp_hash_password($password),
+        // 'user_pass' => $password,
         'first_name' => $fullName, // Add first name if needed
         'role' => $role,
     ));

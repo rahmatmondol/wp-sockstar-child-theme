@@ -107,6 +107,7 @@ if (!get_role('reseller')) {
 function socks_query_vars($vars)
 {
     $vars[] = 'reseller_username';
+    $vars[] = 'member_username';
     $vars[] = 'reseller_dashboard';
     $vars[] = 'reseller_shopsettings';
     $vars[] = 'reseller_sales';
@@ -214,6 +215,9 @@ function custom_rewrite_rules()
     // Add rewrite rule for reseller pages
     $reseller_base = "lag/([^/]+)/?$";
     add_rewrite_rule($reseller_base, 'index.php?reseller_username=$matches[1]', 'top');
+
+    $reseller_base = 'lag/([^/]+)/([^/]+)/?$';
+    add_rewrite_rule($reseller_base, 'index.php?reseller_username=$matches[1]&member_username=$matches[2]', 'top');
 
     // Add rewrite rule for the reseller-dashboard
     $dashboard_base = "user/dashboard/?$";
