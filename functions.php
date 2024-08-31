@@ -365,41 +365,62 @@ add_action('woocommerce_before_add_to_cart_button', 'hidden_field_before_add_to_
 function hidden_field_before_add_to_cart_button()
 {
     // Check if resellerid parameter is set in the URL
-    $resellerid = isset($_GET["resellerid"]) ? $_GET["resellerid"] : '';
+    $resellerid = isset($_GET['resellerid']) ? sanitize_text_field($_GET['resellerid']) : '';
 
     // Output the hidden field
-    echo '<input type="hidden" name="socksresellerid" id="socksresellerid" value="' . esc_attr($resellerid) . '">';
+    if (!empty($resellerid)) {
+        echo '<input type="hidden" name="socksresellerid" id="socksresellerid" value="' . esc_attr($resellerid) . '">';
+    }
 }
 
 // Store reseller ID in session
 add_action('woocommerce_add_to_cart', 'store_reseller_id_in_session');
 function store_reseller_id_in_session()
 {
-    if (isset($_POST['socksresellerid'])) {
+    if (isset($_POST['socksresellerid']) && !empty($_POST['socksresellerid'])) {
         WC()->session->set('socksresellerid', sanitize_text_field($_POST['socksresellerid']));
     }
 }
 
-// Save the reseller ID to the order meta data
 add_action('woocommerce_checkout_create_order', 'add_custom_field_on_placed_order', 10, 2);
+
 function add_custom_field_on_placed_order($order, $data)
 {
+    // Assuming you want to use a dynamic value instead of the hardcoded 31.
     $reseller_id = WC()->session->get('socksresellerid');
 
     if ($reseller_id) {
-        $order->update_meta_data('referenceNumber', $reseller_id);
-        // Optionally, clear the session after saving the data
-        WC()->session->__unset('socksresellerid');
+        $is_team = get_user_meta($reseller_id, 'reseller_id', true);
+        if ($is_team) {
+            $order->update_meta_data('referenceNumber', $is_team);
+            $order->update_meta_data('team_id', $reseller_id);
+        } else {
+            $order->update_meta_data('referenceNumber', $reseller_id);
+        }
     }
 }
+
 
 // Display custom field in the admin order details
 add_action('woocommerce_admin_order_data_after_billing_address', 'display_custom_field_in_admin_order_details', 10, 1);
 function display_custom_field_in_admin_order_details($order)
 {
-    $referenceNumber = $order->get_meta('referenceNumber');
-    if ($referenceNumber) {
-        echo '<p><strong>' . __('Reference Number') . ':</strong> ' . esc_html($referenceNumber) . '</p>';
+    //reseler name
+    $resellerid = $order->get_meta('referenceNumber');
+    if ($resellerid) {
+        $reseller_user = get_user_by('id', $resellerid);
+        if ($reseller_user) {
+            echo '<p><strong>' . __('Reseler Name') . ':</strong> ' . esc_html($reseller_user->display_name) . '</p>';
+        }
+    }
+
+    //team name
+    $team_id = $order->get_meta('team_id');
+    if ($team_id) {
+        $team = get_user_by('id', $team_id);
+        if ($team) {
+            echo '<p><strong>' . __('Team Name') . ':</strong> ' . esc_html($team->display_name) . '</p>';
+        }
     }
 }
 
