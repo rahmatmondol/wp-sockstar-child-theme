@@ -1,21 +1,21 @@
 <?php
 get_header();
+
 // Check if the user is not logged in
 if (!is_user_logged_in()) {
     // Display a message indicating that the user doesn't have access
-?>
+    ?>
     <div class="container-fluid py-3">
         <?php include get_stylesheet_directory() . '/page-templates/forbiden.php'; ?>
     </div>
-<?php
+    <?php
 } else {
 
     global $wpdb;
 
     // Define the meta key and value
-    $meta_key = 'socksresellerid';
+    $meta_key = 'referenceNumber';
     $current_user = wp_get_current_user();
-
 
     // Get the user roles
     $user_roles = $current_user->roles;
@@ -29,24 +29,37 @@ if (!is_user_logged_in()) {
         $meta_value = get_user_meta($current_user->ID, 'reseller_id', true);
     }
 
-
-    // Query to select order_ids with the specified meta key and value
-    $query = $wpdb->prepare("
-    SELECT DISTINCT oi.order_id
-    FROM {$wpdb->prefix}woocommerce_order_items AS oi
-    JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS oim ON oi.order_item_id = oim.order_item_id
-    WHERE oim.meta_key = %s
-    AND oim.meta_value = %s", $meta_key, $meta_value);
-
-    // Retrieve order_ids
-    $order_ids = $wpdb->get_col($query);
-    // Number of users per page
     $per_page_data = 10;
 
     // Get the current page number
     $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
-?>
+    // Query to get total number of orders matching the criteria
+    $total_orders_query = new WC_Order_Query(array(
+        'return'       => 'ids',
+        'meta_key'     => $meta_key,
+        'meta_value'   => $meta_value,
+        'meta_compare' => '=',
+    ));
+    $total_orders = count($total_orders_query->get_orders());
+
+    $args = array(
+        'limit'        => $per_page_data, // Get limited orders per page
+        'return'       => 'ids', // Return only order IDs
+        'page'         => $paged, // Set the current page number
+        'meta_key'     => $meta_key,
+        'meta_value'   => $meta_value,
+        'meta_compare' => '=', // Optional, you can change it to 'LIKE', '>', '<', etc.
+    );
+
+    // Create the query
+    $order_query = new WC_Order_Query($args);
+    $order_ids = $order_query->get_orders();
+
+    // Calculate total pages
+    $total_pages = ceil($total_orders / $per_page_data);
+    ?>
+
     <div class="container-fluid user-dashboard">
         <div class="row">
             <?php include_once get_stylesheet_directory() . '/page-templates/dashboard-sidebar.php'; ?>
@@ -82,7 +95,7 @@ if (!is_user_logged_in()) {
 
                                     // Get order items
                                     $items = $order->get_items();
-                                ?>
+                                    ?>
                                     <tr>
                                         <td><?php echo $row_index++; ?></td>
                                         <td><?php echo $order->get_id(); ?></td>
@@ -95,27 +108,24 @@ if (!is_user_logged_in()) {
                                             foreach ($items as $item_id => $item) {
                                                 $product = $item->get_product(); // Get the product object
                                                 $quantity = $item->get_quantity(); // Get the quantity of the product
-                                            ?>
-
+                                                ?>
                                                 <a href="<?php echo $product->get_permalink(); ?>"><?php echo $product->get_name(); ?></a>
-                                                -> <?php echo __('Qty - ', 'hello-elementor') . $quantity; ?>
-                                                <br>
                                             <?php
                                             }
                                             ?>
                                         </td>
+                                        <td><?php echo $quantity; ?></td>
                                         <td><?php echo $order_notes; ?></td>
                                     </tr>
-                                <?php
+                                    <?php
                                 }
                                 ?>
                             </tbody>
-
                         </table>
 
                         <div class="d-flex justify-content-center">
                             <?php
-                            echo '<nav aria-label="..."><ul class="pagination">';
+                            echo '<nav aria-label="Page navigation example"><ul class="pagination">';
 
                             // Previous button
                             echo '<li class="page-item ' . ($paged <= 1 ? 'disabled' : '') . '">';
@@ -123,14 +133,14 @@ if (!is_user_logged_in()) {
                             echo '</li>';
 
                             // Pagination links
-                            for ($i = 1; $i <= ceil(count($order_ids) / $per_page_data); $i++) {
+                            for ($i = 1; $i <= $total_pages; $i++) {
                                 echo '<li class="page-item ' . ($paged == $i ? 'active' : '') . '">';
                                 echo '<a class="page-link" href="' . esc_url(add_query_arg('paged', $i)) . '">' . $i . '</a>';
                                 echo '</li>';
                             }
 
                             // Next button
-                            echo '<li class="page-item ' . ($paged >= ceil(count($order_ids) / $per_page_data) ? 'disabled' : '') . '">';
+                            echo '<li class="page-item ' . ($paged >= $total_pages ? 'disabled' : '') . '">';
                             echo '<a class="page-link" href="' . esc_url(add_query_arg('paged', $paged + 1)) . '">Next</a>';
                             echo '</li>';
 
@@ -142,7 +152,7 @@ if (!is_user_logged_in()) {
             </div>
         </div>
     </div>
-<?php
+    <?php
 }
 get_footer();
 ?>
