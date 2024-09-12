@@ -18,6 +18,10 @@
             <i class="fa fa-box"></i>
             <span class="ml-2"><?php echo __('Sales', 'hello-elementor'); ?></span>
         </a>
+        <a href="<?php echo site_url('/user/scoreboard'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($reseller_scoreboard) ? 'active' : ''; ?>">
+            <i class="fa fa-box"></i>
+            <span class="ml-2"><?php echo __('Scoreboard', 'hello-elementor'); ?></span>
+        </a>
         <a href="<?php echo site_url('/user/team-members'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($team_members) ? 'active' : ''; ?>">
             <i class="fa fa-box"></i>
             <span class="ml-2"><?php echo __('Members', 'hello-elementor'); ?></span>

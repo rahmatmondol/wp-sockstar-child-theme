@@ -111,6 +111,7 @@ function socks_query_vars($vars)
     $vars[] = 'reseller_dashboard';
     $vars[] = 'reseller_shopsettings';
     $vars[] = 'reseller_sales';
+    $vars[] = 'reseller_scoreboard';
     $vars[] = 'reseller_edit_profile';
     $vars[] = 'user_change_password';
     $vars[] = 'team_register';
@@ -128,6 +129,7 @@ function custom_template_redirect()
     $reseller_dashboard     = $wp_query->get('reseller_dashboard');
     $reseller_shopsettings  = $wp_query->get('reseller_shopsettings');
     $reseller_sales         = $wp_query->get('reseller_sales');
+    $reseller_scoreboard    = $wp_query->get('reseller_scoreboard');
     $reseller_edit_profile  = $wp_query->get('reseller_edit_profile');
     $user_change_password   = $wp_query->get('user_change_password');
     $team_register          = $wp_query->get('team_register');
@@ -164,6 +166,12 @@ function custom_template_redirect()
 
         if (file_exists($reseller_sales_tempalte)) {
             include $reseller_sales_tempalte;
+            exit();  // Make sure to exit after including the template
+        }
+    } elseif ($reseller_scoreboard) {
+        $reseller_scoreboard_tempalte = get_stylesheet_directory() . '/page-templates/reseller/reseller-scoreboard.php';
+        if (file_exists($reseller_scoreboard_tempalte)) {
+            include $reseller_scoreboard_tempalte;
             exit();  // Make sure to exit after including the template
         }
     } elseif ($reseller_edit_profile) {
@@ -234,6 +242,10 @@ function custom_rewrite_rules()
     // Add rewrite rule for profile edit
     $profile_edit_base = 'user/edit-profile/?$';
     add_rewrite_rule($profile_edit_base, 'index.php?reseller_edit_profile=1', 'top');
+
+    // Add rewrite rule for scoreboard
+    $reseller_base_scoreboard = 'user/scoreboard/?$';
+    add_rewrite_rule($reseller_base_scoreboard, 'index.php?reseller_scoreboard=1', 'top');
 
     // Add rewrite rule for change password
     $change_password_base = 'user/change-password/?$';
