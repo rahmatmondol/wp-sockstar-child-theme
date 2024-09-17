@@ -8,55 +8,72 @@ add_action('wp_ajax_socks_cover_profile_images', 'socks_cover_profile_images');
 function custom_login()
 {
     // Check nonce
-    $nonce = $_POST['nonce'];
+    $nonce = isset($_POST['nonce']) ? sanitize_text_field($_POST['nonce']) : '';
     if (!wp_verify_nonce($nonce, 'socks-nonce')) {
         wp_send_json_error(array('message' => 'Invalid nonce.'));
     }
 
-    // Retrieve the values from the AJAX request
-    $email = sanitize_email($_POST['user_email']);
-    $password = $_POST['user_password'];
+    // Retrieve and sanitize the values from the AJAX request
+    $login = isset($_POST['user_login']) ? sanitize_text_field($_POST['user_login']) : '';
+    $password = isset($_POST['user_password']) ? sanitize_text_field($_POST['user_password']) : '';
 
-    // Perform your login logic here
-    // Example: Check if the user exists
-    $user = get_user_by('email', $email);
+    // Check if the login and password fields are not empty
+    if (empty($login) || empty($password)) {
+        wp_send_json_error(array('message' => 'Username/Email and password are required.'));
+    }
+
+    // Determine if the login input is an email or a username
+    if (filter_var($login, FILTER_VALIDATE_EMAIL)) {
+        // Login is an email
+        $user = get_user_by('email', $login);
+    } else {
+        // Login is a username
+        $user = get_user_by('login', $login);
+    }
 
     if (!$user) {
-        // User with this email does not exist
-        wp_send_json_error(array('message' => 'Invalid email or password.'));
+        // User with this email/username does not exist
+        wp_send_json_error(array('message' => 'Invalid email/username or password.'));
     }
 
     $user_id = $user->ID;
 
     // Check if the password is correct
     if (!wp_check_password($password, $user->user_pass, $user_id)) {
-        wp_send_json_error(array('message' => 'The given password is wrong !'));
+        wp_send_json_error(array('message' => 'The given password is incorrect.'));
     }
 
+    // Check if the user is flagged as inactive
     if (get_user_meta($user_id, 'user_flag', true) == 'inactive') {
-        wp_send_json_error(array('message' => __('Your account is not active. Please contact with admin!', 'hello-elementor')));
+        wp_send_json_error(array('message' => __('Your account is not active. Please contact the admin.', 'hello-elementor')));
     }
 
+    // Prepare the credentials for login
     $credentials = array(
-        'user_login'    => $user->user_login, // Use the username associated with the email
+        'user_login'    => $user->user_login, // Use the username associated with the email or login
         'user_password' => $password,
         'remember'      => true,
     );
 
-    $user = wp_signon($credentials, false);
-
-    if (is_wp_error($user)) {
+    // Perform the login
+    $logged_in_user = wp_signon($credentials, false);
+    $user_id = $logged_in_user->ID;
+    $reseller_id = get_user_meta($user_id, 'reseller_id', true);
+    if (is_wp_error($logged_in_user)) {
         // Login failed
-        wp_send_json_error(array('message' => $user->get_error_message()));
+        wp_send_json_error(array('message' => $logged_in_user->get_error_message()));
     } else {
-        // Check user role after successful login
-        $user_roles = get_userdata($user_id)->roles;
-
+        // Check the user role after successful login
+        $user_roles = $logged_in_user->roles;
         // Redirect based on user role
         if (in_array('reseller', $user_roles)) {
             wp_send_json_success(array('message' => 'Login successful', 'redirect' => site_url() . '/user/dashboard'));
         } else {
-            wp_send_json_success(array('message' => 'Login successful', 'redirect' => wc_get_account_endpoint_url('dashboard')));
+            if ($reseller_id) {
+                wp_send_json_success(array('message' => 'Login successful', 'redirect' => site_url() . '/user/dashboard'));
+            } else {
+                wp_send_json_success(array('message' => 'Login successful', 'redirect' => wc_get_account_endpoint_url('dashboard')));
+            }
         }
     }
 }

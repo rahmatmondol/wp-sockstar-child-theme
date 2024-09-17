@@ -8,10 +8,10 @@ if (!is_user_logged_in()) :
                     <div id="error-message" class="bg-danger text-white p-3 my-2"><span class=" text-white"></span></div>
                     <form action="" class="row g-4 socks-login" method="post">
                         <div class="col-12">
-                            <label class="text-dark"><?php echo __('Email Address', 'hello-elementor'); ?><span class="text-danger">*</span></label>
+                            <label class="text-dark"><?php echo __('Email/UserName', 'hello-elementor'); ?><span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-text text-dark"><i class="fa-solid fa-user-secret"></i></div>
-                                <input type="email" name="user_email" class="form-control" placeholder="<?php echo __('Enter Email Address', 'hello-elementor'); ?>" required>
+                                <input type="text" name="user_login" class="form-control" placeholder="<?php echo __('Enter Email Address', 'hello-elementor'); ?>" required>
                             </div>
                         </div>
 
