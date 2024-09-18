@@ -88,6 +88,10 @@ if (!is_user_logged_in()) {
     // Count the number of orders for the user
     $order_count = count($order_ids);
 
+    if ($order_count == 0) {
+        update_option('countdown', false);
+    }
+
     $total_sold_price = 0;
     foreach ($order_ids as $order_id) {
         $order = wc_get_order($order_id);
@@ -156,32 +160,21 @@ if (!is_user_logged_in()) {
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Get the countdown element
             const countdownElement = document.getElementById('countdown');
 
-            // Get the countdown date from the data attribute
             const countdownDate = countdownElement.getAttribute('data-countdown-date');
 
-            // Convert the countdown date to a JavaScript date object
             const countdownStartDate = new Date(countdownDate);
 
-            // Set the countdown duration (21 days)
             const countdownDuration = 21; // in days
-
-            // Get today's date
             const today = new Date();
 
-            // Calculate the number of days between the start date and today
-            const timeDiff = today.getTime() - countdownStartDate.getTime();
-            const daysPassed = Math.floor(timeDiff / (1000 * 3600 * 24));
+            const timeDiff = today.getDate() - countdownStartDate.getDate();
+            const daysLeft = countdownDuration - timeDiff;
 
-            // Calculate days left (21 days minus days passed)
-            const daysLeft = countdownDuration - daysPassed;
-
-            // Check if the countdown is still active or has passed
             if (daysLeft > 0) {
                 countdownElement.innerHTML = daysLeft + " Dagar kvar";
-            }else{
+            } else {
                 countdownElement.style.display = "none";
             }
         });
