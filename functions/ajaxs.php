@@ -70,7 +70,7 @@ function custom_login()
             wp_send_json_success(array('message' => 'Login successful', 'redirect' => site_url() . '/user/dashboard'));
         } else {
             if ($reseller_id) {
-                wp_send_json_success(array('message' => 'Login successful', 'redirect' => site_url() . '/user/dashboard'));
+                wp_send_json_success(array('message' => 'Login successful', 'redirect' => site_url() . '/user/scoreboard'));
             } else {
                 wp_send_json_success(array('message' => 'Login successful', 'redirect' => wc_get_account_endpoint_url('dashboard')));
             }
@@ -92,17 +92,18 @@ function shocks_user_registration()
     endif;
     // var_dump($_POST);
     // exit();
-    $fullName           = sanitize_text_field($_POST['fullName']);
-    $address            = sanitize_text_field($_POST['Address']);
-    $zip_code           = sanitize_text_field($_POST['zipCode']);
-    $postal_address     = sanitize_text_field($_POST['PostalAddress']);
-    $email              = sanitize_email($_POST['EmailAddress']);
-    $email_repeat       = sanitize_email($_POST['EmailAddressRepeat']);
-    $password           = $_POST['password'];
-    $confirmPassword    = $_POST['confirmPassword'];
-    $bank_name          = $_POST['bank_name'];
-    $account_number     = $_POST['account_number'];
+    // $address            = sanitize_text_field($_POST['Address']);
+    // $zip_code           = sanitize_text_field($_POST['zipCode']);
+    // $postal_address     = sanitize_text_field($_POST['PostalAddress']);
+    // $email_repeat       = sanitize_email($_POST['EmailAddressRepeat']);
+    // $confirmPassword    = $_POST['confirmPassword'];
+    // $bank_name          = $_POST['bank_name'];
+    // $account_number     = $_POST['account_number'];
     // $phone_number = sanitize_text_field($_POST['PhoneNumber']);
+
+    $fullName           = sanitize_text_field($_POST['fullName']);
+    $email              = sanitize_email($_POST['EmailAddress']);
+    $password           = $_POST['password'];
     if ($register_type == 'reseller') :
         // Get the user data from the AJAX request
         $user_type      = sanitize_text_field($_POST['userType']);
@@ -110,7 +111,7 @@ function shocks_user_registration()
         $role           = 'reseller';
 
         // Check if required fields are empty
-        if (empty($user_type) || empty($team_name) || empty($address) || empty($zip_code) || empty($postal_address) || empty($email) || empty($email_repeat)) {
+        if (empty($user_type) || empty($team_name) || empty($email)) {
             wp_send_json_error(array('message' => __('All fields are required.', 'hello-elementor')));
         }
         $suc_msg = 'Your registration is pending approval.';
@@ -121,17 +122,19 @@ function shocks_user_registration()
     endif;
 
     // Check if email and repeated email match
-    if ($email !== $email_repeat) {
-        wp_send_json_error(array('message' => __('Emails do not match.', 'hello-elementor')));
-    }
+    // if ($email !== $email_repeat) {
+    //     wp_send_json_error(array('message' => __('Emails do not match.', 'hello-elementor')));
+    // }
+
     // Check if email already exist
     if (email_exists($email)) {
         wp_send_json_error(array('message' => __('Email already exist.Please try with different email.', 'hello-elementor')));
     }
+    
     // Check if email and repeated email match
-    if ($password !== $confirmPassword) {
-        wp_send_json_error(array('message' => __('Password do not match.', 'hello-elementor')));
-    }
+    // if ($password !== $confirmPassword) {
+    //     wp_send_json_error(array('message' => __('Password do not match.', 'hello-elementor')));
+    // }
 
     // Check registration type is reseller or team member
     if ($register_type == 'reseller') {
@@ -163,12 +166,12 @@ function shocks_user_registration()
         elseif ($register_type == 'team') :
             update_user_meta($user_id, 'reseller_id', $reseller_id);
         endif;
-        // Update user meta with additional information
-        update_user_meta($user_id, 'address', $address);
-        update_user_meta($user_id, 'zip_code', $zip_code);
-        update_user_meta($user_id, 'postal_address', $postal_address);
-        update_user_meta($user_id, 'bank_name', $bank_name);
-        update_user_meta($user_id, 'account_number', $account_number);
+    // Update user meta with additional information
+    // update_user_meta($user_id, 'address', $address);
+    // update_user_meta($user_id, 'zip_code', $zip_code);
+    // update_user_meta($user_id, 'postal_address', $postal_address);
+    // update_user_meta($user_id, 'bank_name', $bank_name);
+    // update_user_meta($user_id, 'account_number', $account_number);
     // update_user_meta($user_id, 'phone_number', $phone_number);
 
     // // Call the socks_get_email_template filter

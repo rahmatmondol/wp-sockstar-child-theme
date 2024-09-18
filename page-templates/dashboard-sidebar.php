@@ -3,17 +3,21 @@
     <span class="px-3 py-2">
         <?php
         echo __('Username:', 'hello-elementor') . esc_html($current_user->user_login) . '<br />';
+        $rols = $current_user->roles[0];
         ?>
     </span>
     <div class="list-group rounded-0">
+
         <a href="<?php echo site_url('/user/dashboard'); ?>" class="list-group-item list-group-item-action border-0 d-flex align-items-center <?php echo ($reseller_dashboard) ? 'active' : ''; ?>">
             <i class="fa fa-th-large"></i>
             <span class="ml-2"><?php echo __('Dashboard', 'hello-elementor'); ?></span>
         </a>
-        <a href="<?php echo site_url('/user/shop-settings'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($reseller_shopsettings) ? 'active' : ''; ?>">
-            <i class="fa-solid fa-shop"></i>
-            <span class="ml-2"><?php echo __('Shop Settings', 'hello-elementor'); ?></span>
-        </a>
+        <?php if ($rols == 'reseller'): ?>
+            <a href="<?php echo site_url('/user/shop-settings'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($reseller_shopsettings) ? 'active' : ''; ?>">
+                <i class="fa-solid fa-shop"></i>
+                <span class="ml-2"><?php echo __('Shop Settings', 'hello-elementor'); ?></span>
+            </a>
+        <?php endif; ?>
         <a href="<?php echo site_url('/user/orders'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($reseller_sales) ? 'active' : ''; ?>">
             <i class="fa fa-box"></i>
             <span class="ml-2"><?php echo __('Sales', 'hello-elementor'); ?></span>
@@ -22,22 +26,24 @@
             <i class="fa fa-box"></i>
             <span class="ml-2"><?php echo __('Scoreboard', 'hello-elementor'); ?></span>
         </a>
-        <a href="<?php echo site_url('/user/team-members'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($team_members) ? 'active' : ''; ?>">
-            <i class="fa fa-box"></i>
-            <span class="ml-2"><?php echo __('Members', 'hello-elementor'); ?></span>
-        </a>
-        <a href="<?php echo site_url('/user/team-register'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($team_register) ? 'active' : ''; ?>">
-            <i class="fa fa-box"></i>
-            <span class="ml-2"><?php echo __('Member Register', 'hello-elementor'); ?></span>
-        </a>
-        <a href="<?php echo site_url('/user/edit-profile'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($reseller_profilesettings) ? 'active' : ''; ?>">
-            <i class="fa fa-box"></i>
-            <span class="ml-2"><?php echo __('Edit Profile', 'hello-elementor'); ?></span>
-        </a>
-        <a href="<?php echo site_url('/user/payment-info'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($payment_info) ? 'active' : ''; ?>">
-            <i class="fa fa-box"></i>
-            <span class="ml-2"><?php echo __('Payment info', 'hello-elementor'); ?></span>
-        </a>
+        <?php if ($rols == 'reseller'): ?>
+            <a href="<?php echo site_url('/user/team-members'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($team_members) ? 'active' : ''; ?>">
+                <i class="fa fa-box"></i>
+                <span class="ml-2"><?php echo __('Members', 'hello-elementor'); ?></span>
+            </a>
+            <a href="<?php echo site_url('/user/team-register'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($team_register) ? 'active' : ''; ?>">
+                <i class="fa fa-box"></i>
+                <span class="ml-2"><?php echo __('Member Register', 'hello-elementor'); ?></span>
+            </a>
+            <a href="<?php echo site_url('/user/edit-profile'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($reseller_profilesettings) ? 'active' : ''; ?>">
+                <i class="fa fa-box"></i>
+                <span class="ml-2"><?php echo __('Edit Profile', 'hello-elementor'); ?></span>
+            </a>
+            <a href="<?php echo site_url('/user/payment-info'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($payment_info) ? 'active' : ''; ?>">
+                <i class="fa fa-box"></i>
+                <span class="ml-2"><?php echo __('Payment info', 'hello-elementor'); ?></span>
+            </a>
+        <?php endif; ?>
         <a href="<?php echo site_url('/user/change-password'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($reseller_changepassword) ? 'active' : ''; ?>">
             <i class="fa fa-box"></i>
             <span class="ml-2"><?php echo __('Change Password', 'hello-elementor'); ?></span>
