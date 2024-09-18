@@ -73,6 +73,30 @@ if (!is_user_logged_in()) {
         return $b['order_count'] - $a['order_count'];
     });
 
+    $args = array(
+        'limit'        => -1, // Get all orders for the user
+        'return'       => 'ids', // Return only order IDs
+        'meta_key'     => 'referenceNumber',
+        'meta_value'   => $reseller_id,
+        'meta_compare' => '=', // Match the reseller_id in the order meta
+    );
+
+    // Create the query to fetch orders
+    $order_query = new WC_Order_Query($args);
+    $order_ids = $order_query->get_orders(); // Get all order IDs for this user
+
+    // Count the number of orders for the user
+    $order_count = count($order_ids);
+
+    $total_sold_price = 0;
+    foreach ($order_ids as $order_id) {
+        $order = wc_get_order($order_id);
+        $total_sold_price += (float) $order->get_total(); // Add the total price of the order to the total sold price
+    }
+
+    // countdown
+    $countdown_date = get_option('countdown');
+
 ?>
 
     <div class="container-fluid user-dashboard">
@@ -81,8 +105,12 @@ if (!is_user_logged_in()) {
             <div class="col-md-9 col-lg-10 ml-md-auto px-0">
                 <div class="row justify-content-center align-items-center">
                     <div class="col-md-11 py-5">
+                        <div class="row header_info">
+                            <div class="col"><?php echo __('Products Sold: ', 'hello-elementor') . $order_count; ?></div>
+                            <div class="col"><?php echo __('Total Earned: ', 'hello-elementor') . wc_price($total_sold_price); ?></div>
+                            <div class="col" id="countdown" data-countdown-date="<?php echo esc_attr($countdown_date); ?>"></div>
+                        </div>
                         <div class="table-responsive">
-
                             <table class="table caption-top">
                                 <caption><?php echo __('List of Members', 'hello-elementor'); ?></caption>
                                 <thead>
@@ -101,11 +129,11 @@ if (!is_user_logged_in()) {
                                         $rank = ($paged - 1) * $users_per_page + $key + 1;
 
                                         if ($rank == 1 && $order_count > 0) {
-                                            $badg = '<img src="'.get_stylesheet_directory_uri().'/assets/images/gold-medal.png" alt="" style="width: 30px;">';
+                                            $badg = '<img src="' . get_stylesheet_directory_uri() . '/assets/images/gold-medal.png" alt="" style="width: 30px;">';
                                         } elseif ($rank == 2 && $order_count > 0) {
-                                            $badg = '<img src="'.get_stylesheet_directory_uri().'/assets/images/silver-medal.png" alt="" style="width: 30px;">';
+                                            $badg = '<img src="' . get_stylesheet_directory_uri() . '/assets/images/silver-medal.png" alt="" style="width: 30px;">';
                                         } elseif ($rank == 3 && $order_count > 0) {
-                                            $badg = '<img src="'.get_stylesheet_directory_uri().'/assets/images/bronze-medal.png" alt="" style="width: 30px;">';
+                                            $badg = '<img src="' . get_stylesheet_directory_uri() . '/assets/images/bronze-medal.png" alt="" style="width: 30px;">';
                                         } else {
                                             $badg = $rank;
                                         }
@@ -126,7 +154,49 @@ if (!is_user_logged_in()) {
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get the countdown element
+            const countdownElement = document.getElementById('countdown');
 
+            // Get the countdown date from the data attribute
+            const countdownDate = countdownElement.getAttribute('data-countdown-date');
+
+            // Convert the countdown date to a JavaScript date object
+            const countdownStartDate = new Date(countdownDate);
+
+            // Set the countdown duration (21 days)
+            const countdownDuration = 21; // in days
+
+            // Get today's date
+            const today = new Date();
+
+            // Calculate the number of days between the start date and today
+            const timeDiff = today.getTime() - countdownStartDate.getTime();
+            const daysPassed = Math.floor(timeDiff / (1000 * 3600 * 24));
+
+            // Calculate days left (21 days minus days passed)
+            const daysLeft = countdownDuration - daysPassed;
+
+            // Check if the countdown is still active or has passed
+            if (daysLeft > 0) {
+                countdownElement.innerHTML = daysLeft + " Dagar kvar";
+            }else{
+                countdownElement.style.display = "none";
+            }
+        });
+    </script>
+    <style>
+        .header_info .col {
+            text-align: center;
+            font-size: 28px;
+            background: #ddd;
+            padding: 10px;
+            font-weight: 600;
+            border-radius: 8px;
+            margin: 10px;
+        }
+    </style>
 <?php
 }
 get_footer();

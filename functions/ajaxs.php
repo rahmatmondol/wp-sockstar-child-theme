@@ -130,7 +130,7 @@ function shocks_user_registration()
     if (email_exists($email)) {
         wp_send_json_error(array('message' => __('Email already exist.Please try with different email.', 'hello-elementor')));
     }
-    
+
     // Check if email and repeated email match
     // if ($password !== $confirmPassword) {
     //     wp_send_json_error(array('message' => __('Password do not match.', 'hello-elementor')));
@@ -148,7 +148,6 @@ function shocks_user_registration()
         'user_login' => sanitize_title($user_login),
         'user_email' => $email,
         'user_pass' => wp_hash_password($password),
-        // 'user_pass' => $password,
         'first_name' => $fullName, // Add first name if needed
         'role' => $role,
     ));
