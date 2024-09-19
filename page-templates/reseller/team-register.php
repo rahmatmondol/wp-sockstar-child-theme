@@ -45,7 +45,7 @@ if (!is_user_logged_in()) {
                                 <div class="row" style="margin-bottom: 20px;">
                                     <div class="form-group col-md-6 order-1 order-md-0">
                                         <label for="email"><?php _e('Email address', 'hello-elementor'); ?></label>
-                                        <input required name="EmailAddress" id="email" class="form-control" prevent-copy type="email" placeholder="<?php _e('Email Address', 'hello-elementor'); ?>" style="border-radius: 5px;">
+                                        <input required name="email" id="emailAddress" class="form-control" prevent-copy type="email" placeholder="<?php _e('Email Address', 'hello-elementor'); ?>" style="border-radius: 5px;">
                                         <span class="error-msg" style="color: red;"></span>
                                     </div>
                                     <div class="form-group col-md-6 order-1 order-md-0">

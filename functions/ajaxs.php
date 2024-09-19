@@ -102,7 +102,7 @@ function shocks_user_registration()
     // $phone_number = sanitize_text_field($_POST['PhoneNumber']);
 
     $fullName           = sanitize_text_field($_POST['fullName']);
-    $email              = sanitize_email($_POST['EmailAddress']);
+    $email              = sanitize_email($_POST['email']);
     $password           = $_POST['password'];
     if ($register_type == 'reseller') :
         // Get the user data from the AJAX request
@@ -116,6 +116,12 @@ function shocks_user_registration()
         }
         $suc_msg = 'Your registration is pending approval.';
     elseif ($register_type == 'team') :
+
+        // Check if required fields are empty
+        if (empty($email)) {
+            wp_send_json_error(array('message' => __('Email is required.', 'hello-elementor')));
+        }
+
         $reseller_id    = sanitize_text_field($_POST['reseller_id']);
         $role           = 'subscriber';
         $suc_msg        = 'Your registration is successful.';

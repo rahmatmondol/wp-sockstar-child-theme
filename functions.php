@@ -409,14 +409,12 @@ function add_custom_field_on_placed_order($order, $data)
         } else {
             $order->update_meta_data('referenceNumber', $reseller_id);
         }
-    }
 
-    //countdoun
-    $is_countdown = get_option('countdown');
-    // Check if the option is empty or not set
-    if (empty($is_countdown)) {
-        $today = date('Y-m-d');
-        update_option('countdown', $today);
+        $is_countdown = get_user_meta($reseller_id, 'countdown', true);
+        if (empty($is_countdown)) {
+            $today = date('Y-m-d');
+            update_user_meta($reseller_id, 'countdown', $today);
+        }
     }
 }
 

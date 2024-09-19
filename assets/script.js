@@ -47,21 +47,23 @@
                 'action': 'shocks_user_registration',
                 'userType': $('#userType').val(),
                 'fullName': $('#fullName').val(),
-                'TeamName': $('#TeamName').val(),
-                'Address': $('#Address').val(),
-                'zipCode': $('#zipCode').val(),
-                'PostalAddress': $('#PostalAddress').val(),
-                'EmailAddress': $('#EmailAddress').val(),
-                'EmailAddressRepeat': $('#EmailAddressRepeat').val(),
+                'email': $('#emailAddress').val(),
                 'password': $('#password').val(),
-                'confirmPassword': $('#confirmPassword').val(),
                 'reseller_id': $('#reseller_id').val(),
                 'register_type': $('#register_type').val(),
-                'bank_name': $('#bank_name').val(),
-                'account_number': $('#account_number').val(),
+                // 'TeamName': $('#TeamName').val(),
+                // 'Address': $('#Address').val(),
+                // 'zipCode': $('#zipCode').val(),
+                // 'PostalAddress': $('#PostalAddress').val(),
+                // 'EmailAddressRepeat': $('#EmailAddressRepeat').val(),
+                // 'confirmPassword': $('#confirmPassword').val(),
+                // 'bank_name': $('#bank_name').val(),
+                // 'account_number': $('#account_number').val(),
                 // 'PhoneNumber': $('#PhoneNumber').val(),
                 'security': ajax_object.nonce,
             };
+
+            console.log(data);
 
             // Validate fields
             var isValid = true;
@@ -74,10 +76,10 @@
             });
 
             // Additional validation (e.g., email matching)
-            if (data.Email !== data.EmailRepeat) {
-                isValid = false;
-                $('#EmailAddressRepeat').after('<div class="error-message">Emails do not match</div>');
-            }
+            // if (data.Email !== data.EmailRepeat) {
+            //     isValid = false;
+            //     $('#EmailAddressRepeat').after('<div class="error-message">Emails do not match</div>');
+            // }
 
             // Proceed with Ajax request if all validations pass
             if (isValid) {

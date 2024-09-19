@@ -99,7 +99,13 @@ if (!is_user_logged_in()) {
     }
 
     // countdown
-    $countdown_date = get_option('countdown');
+    $countdown_date = get_user_meta($reseller_id, 'countdown', true);
+        // update_user_meta($reseller_id, 'countdown', '');
+
+    // if (empty($countdown_date)) {
+    //     $today = date('Y-m-d');
+    //     update_user_meta($reseller_id, 'countdown', $today);
+    // }
 
 ?>
 
@@ -109,9 +115,12 @@ if (!is_user_logged_in()) {
             <div class="col-md-9 col-lg-10 ml-md-auto px-0">
                 <div class="row justify-content-center align-items-center">
                     <div class="col-md-11 py-5">
+                        <pre>
+                            <?php echo $countdown_date; ?>
+                        </pre>
                         <div class="row header_info">
                             <div class="col"><?php echo __('Products Sold: ', 'hello-elementor') . $order_count; ?></div>
-                            <div class="col"><?php echo __('Total Earned: ', 'hello-elementor') . wc_price($total_sold_price); ?></div>
+                            <div class="col"><?php echo __('Total Earned: ', 'hello-elementor') . wc_price(round($total_sold_price) / 2); ?></div>
                             <div class="col" id="countdown" data-countdown-date="<?php echo esc_attr($countdown_date); ?>"></div>
                         </div>
                         <div class="table-responsive">
@@ -146,7 +155,7 @@ if (!is_user_logged_in()) {
                                             <th scope="row"><?php echo $badg; ?></th>
                                             <td><?php echo $user->first_name . ' ' . $user->last_name; ?></td>
                                             <td><?php echo $order_count; ?></td>
-                                            <td><?php echo wc_price($total_sold_price); ?></td>
+                                            <td><?php echo wc_price(round($total_sold_price) / 2); ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
