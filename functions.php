@@ -406,6 +406,7 @@ function add_custom_field_on_placed_order($order, $data)
         if ($is_team) {
             $order->update_meta_data('referenceNumber', $is_team);
             $order->update_meta_data('team_id', $reseller_id);
+            $reseller_id = $is_team;
         } else {
             $order->update_meta_data('referenceNumber', $reseller_id);
         }

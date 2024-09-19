@@ -88,10 +88,6 @@ if (!is_user_logged_in()) {
     // Count the number of orders for the user
     $order_count = count($order_ids);
 
-    if ($order_count == 0) {
-        update_option('countdown', false);
-    }
-
     $total_sold_price = 0;
     foreach ($order_ids as $order_id) {
         $order = wc_get_order($order_id);
@@ -100,12 +96,12 @@ if (!is_user_logged_in()) {
 
     // countdown
     $countdown_date = get_user_meta($reseller_id, 'countdown', true);
-        // update_user_meta($reseller_id, 'countdown', '');
 
-    // if (empty($countdown_date)) {
-    //     $today = date('Y-m-d');
-    //     update_user_meta($reseller_id, 'countdown', $today);
-    // }
+    //desable countdown
+    if ($order_count == 0) {
+        $today = date('Y-m-d');
+        update_user_meta($reseller_id, 'countdown', false);
+    }
 
 ?>
 
@@ -115,9 +111,6 @@ if (!is_user_logged_in()) {
             <div class="col-md-9 col-lg-10 ml-md-auto px-0">
                 <div class="row justify-content-center align-items-center">
                     <div class="col-md-11 py-5">
-                        <pre>
-                            <?php echo $countdown_date; ?>
-                        </pre>
                         <div class="row header_info">
                             <div class="col"><?php echo __('Products Sold: ', 'hello-elementor') . $order_count; ?></div>
                             <div class="col"><?php echo __('Total Earned: ', 'hello-elementor') . wc_price(round($total_sold_price) / 2); ?></div>
@@ -173,9 +166,13 @@ if (!is_user_logged_in()) {
 
             const countdownDate = countdownElement.getAttribute('data-countdown-date');
 
+            if(!countdownDate) {
+                countdownElement.style.display = "none";
+            }
+
             const countdownStartDate = new Date(countdownDate);
 
-            const countdownDuration = 21; // in days
+            const countdownDuration = 0; // in days
             const today = new Date();
 
             const timeDiff = today.getDate() - countdownStartDate.getDate();
@@ -184,7 +181,8 @@ if (!is_user_logged_in()) {
             if (daysLeft > 0) {
                 countdownElement.innerHTML = daysLeft + " Dagar kvar";
             } else {
-                countdownElement.style.display = "none";
+                countdownElement.innerHTML = "det är över";
+                countdownElement.style.color = "red";
             }
         });
     </script>
