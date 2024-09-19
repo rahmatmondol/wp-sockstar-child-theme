@@ -114,7 +114,7 @@ function shocks_user_registration()
         if (empty($user_type) || empty($team_name) || empty($email)) {
             wp_send_json_error(array('message' => __('All fields are required.', 'hello-elementor')));
         }
-        $suc_msg = 'Your registration is pending approval.';
+        $suc_msg = __('Your registration is pending approval.', 'hello-elementor');
     elseif ($register_type == 'team') :
 
         // Check if required fields are empty
@@ -124,7 +124,7 @@ function shocks_user_registration()
 
         $reseller_id    = sanitize_text_field($_POST['reseller_id']);
         $role           = 'subscriber';
-        $suc_msg        = 'Your registration is successful.';
+        $suc_msg        = __('Your registration is successful.', 'hello-elementor');
     endif;
 
     // Check if email and repeated email match
@@ -188,7 +188,7 @@ function shocks_user_registration()
         'register_type'     => $register_type,
         'redirect_url' => ($register_type == 'reseller') ? ' ' : site_url('/login'),
     ];
-    wp_send_json_success(array('message' => __($suc_msg, 'hello-elementor'), 'data' => $userdata));
+    wp_send_json_success(array('message' => $suc_msg, 'data' => $userdata));
 }
 
 function socks_cover_profile_images()
