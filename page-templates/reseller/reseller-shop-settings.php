@@ -209,7 +209,7 @@ if (!is_user_logged_in()) {
                                     <div id="cover-photos-preview" class="pt-3"><img src="<?php echo $shop_cover_img_src; ?>" alt=""></div>
                                 </div>
                             </div>
-                            <h3 class="py-4 text-center fw-bold"><?php echo __('Use your own material', 'hello-elementor'); ?></h3>
+                            <h3 class="py-4 text-center fw-bold"><?php echo __('Använd vårt material', 'hello-elementor'); ?></h3>
 
                             <div class="mb-3 row">
                                 <div class="col-md-6 col-12 text-center">

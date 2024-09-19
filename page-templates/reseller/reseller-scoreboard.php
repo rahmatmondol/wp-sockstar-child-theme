@@ -172,7 +172,7 @@ if (!is_user_logged_in()) {
 
             const countdownStartDate = new Date(countdownDate);
 
-            const countdownDuration = 0; // in days
+            const countdownDuration = 21; // in days
             const today = new Date();
 
             const timeDiff = today.getDate() - countdownStartDate.getDate();

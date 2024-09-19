@@ -79,10 +79,103 @@ function custom_login()
 }
 
 //registration for reseller , team
-add_action('wp_ajax_shocks_user_registration', 'shocks_user_registration');
-add_action('wp_ajax_nopriv_shocks_user_registration', 'shocks_user_registration');
+add_action('wp_ajax_shocks_user_registration', 'shocks_member_registration');
+add_action('wp_ajax_nopriv_shocks_user_registration', 'shocks_member_registration');
 
-function shocks_user_registration()
+function shocks_member_registration()
+{
+    // Verify the nonce for security
+    check_ajax_referer('socks-nonce', 'security');
+
+    // Sanitize and validate the registration type
+    $register_type = sanitize_text_field($_POST['register_type']);
+    if (empty($register_type) || !in_array($register_type, array('reseller', 'team'))) {
+        wp_send_json_error(array('message' => __('Invalid registration type.', 'hello-elementor')));
+    }
+
+    // Sanitize the input fields
+    $fullName = sanitize_text_field($_POST['fullName']);
+    $email = sanitize_email($_POST['email']);
+    $password = $_POST['password'];
+
+    // Validate required fields
+    if (empty($email)) {
+        wp_send_json_error(array('message' => __('Email is required.', 'hello-elementor')));
+    }
+
+    if (empty($password)) {
+        wp_send_json_error(array('message' => __('Password is required.', 'hello-elementor')));
+    }
+
+    // Check if the email already exists
+    if (email_exists($email)) {
+        wp_send_json_error(array('message' => __('Email already exists. Please try with a different email.', 'hello-elementor')));
+    }
+
+    // Determine user role and additional fields based on registration type
+    if ($register_type == 'reseller') {
+        $user_type = sanitize_text_field($_POST['userType']);
+        $team_name = sanitize_text_field($_POST['TeamName']);
+        $role = 'reseller';
+
+        // Validate reseller-specific fields
+        if (empty($user_type) || empty($team_name)) {
+            wp_send_json_error(array('message' => __('All fields are required for resellers.', 'hello-elementor')));
+        }
+
+        $user_login = $team_name;
+        $success_message = __('Your registration is pending approval.', 'hello-elementor');
+    } else if ($register_type == 'team') {
+        $reseller_id = sanitize_text_field($_POST['reseller_id']);
+        $role = 'subscriber';
+
+        // Validate team-specific fields
+        if (empty($reseller_id)) {
+            wp_send_json_error(array('message' => __('Reseller ID is required for team members.', 'hello-elementor')));
+        }
+
+        $user_login = $fullName;
+        $success_message = __('Your registration is successful.', 'hello-elementor');
+    }
+
+    // Insert the user into the database
+    $user_id = wp_insert_user(array(
+        'user_login' => sanitize_title($user_login),
+        'user_email' => $email,
+        'user_pass'  => $password, 
+        'first_name' => $fullName,
+        'role'       => $role,
+    ));
+
+    // Handle errors during user creation
+    if (is_wp_error($user_id)) {
+        wp_send_json_error(array('message' => $user_id->get_error_message()));
+    }
+
+    // Additional meta for resellers
+    if ($register_type == 'reseller') {
+        update_user_meta($user_id, 'user_type', $user_type);
+        update_user_meta($user_id, 'team_name', $team_name);
+        update_user_meta($user_id, 'user_flag', 'inactive');
+    }
+
+    // Additional meta for team members
+    if ($register_type == 'team') {
+        update_user_meta($user_id, 'reseller_id', $reseller_id);
+    }
+
+    // Trigger the email action
+    do_action('socks_send_email_template_action', 'signup-email', $user_id, true);
+
+    // Return success response
+    wp_send_json_success(array('message' => $success_message, 'data' => array(
+        'register_type' => $register_type,
+        'redirect_url'  => ($register_type == 'reseller') ? '' : site_url('/login'),
+    )));
+}
+
+
+function shocks_reseler_registration()
 {
     check_ajax_referer('socks-nonce', 'security');
     $register_type = $_POST['register_type'];
@@ -104,6 +197,15 @@ function shocks_user_registration()
     $fullName           = sanitize_text_field($_POST['fullName']);
     $email              = sanitize_email($_POST['email']);
     $password           = $_POST['password'];
+
+    // Check if required fields are empty
+    if (empty($email)) {
+        wp_send_json_error(array('message' => __('Email is required.', 'hello-elementor')));
+    }
+    if (empty($password)) {
+        wp_send_json_error(array('message' => __('Password is required.', 'hello-elementor')));
+    }
+
     if ($register_type == 'reseller') :
         // Get the user data from the AJAX request
         $user_type      = sanitize_text_field($_POST['userType']);
@@ -116,12 +218,6 @@ function shocks_user_registration()
         }
         $suc_msg = __('Your registration is pending approval.', 'hello-elementor');
     elseif ($register_type == 'team') :
-
-        // Check if required fields are empty
-        if (empty($email)) {
-            wp_send_json_error(array('message' => __('Email is required.', 'hello-elementor')));
-        }
-
         $reseller_id    = sanitize_text_field($_POST['reseller_id']);
         $role           = 'subscriber';
         $suc_msg        = __('Your registration is successful.', 'hello-elementor');
@@ -141,6 +237,8 @@ function shocks_user_registration()
     // if ($password !== $confirmPassword) {
     //     wp_send_json_error(array('message' => __('Password do not match.', 'hello-elementor')));
     // }
+
+
 
     // Check registration type is reseller or team member
     if ($register_type == 'reseller') {
@@ -187,6 +285,8 @@ function shocks_user_registration()
     $userdata = [
         'register_type'     => $register_type,
         'redirect_url' => ($register_type == 'reseller') ? ' ' : site_url('/login'),
+        'password' => $password,
+        'user_pass' => wp_hash_password($password),
     ];
     wp_send_json_success(array('message' => $suc_msg, 'data' => $userdata));
 }
