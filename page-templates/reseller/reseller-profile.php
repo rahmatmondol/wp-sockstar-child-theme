@@ -80,6 +80,7 @@ if ($reseller_user) {
 
         <div class="row justify-content-center">
             <div class="col-md-10 col-12 pt-4 text-center px-4">
+                <h2><?php echo __('Stöd vårt äventyr - ett köp tar oss närmare!', 'hello-elementor'); ?></h2>
                 <p><?php echo __($shop_description, 'hello-elementor'); ?></p>
             </div>
             <div class="col-12">

@@ -20,19 +20,19 @@ if (!is_user_logged_in()) {
             <div class="col-md-9 col-lg-10 ml-md-auto px-0 dasboard-body">
                 <div class="row justify-content-center align-items-center p-5">
                     <div class="col-xs-6 col-sm-6 col-md-3 col-lg-2 p-2">
-                        <a class="text-decoration-none" href="#">
+                        <a class="text-decoration-none" href="<?php echo site_url('/user/orders'); ?>">
                             <div class="card p-3 shadow bg-purple text-center border-0">
                                 <div class="card-body">
                                     <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/dashboard-sales.jpg" alt="">
                                     <hr />
                                     <p class="card-title lead"><?php echo __('Sales', 'hello-elementor'); ?></p>
                                 </div>
-                            </div>
+                            </div> 
                         </a>
                     </div>
 
                     <div class="col-xs-6 col-sm-6 col-md-3 col-lg-2 p-2">
-                        <a class="text-decoration-none" href="#">
+                        <a class="text-decoration-none" href="<?php echo site_url('/user/team-members'); ?>">
                             <div class="card p-3 shadow bg-purple text-center border-0">
                                 <div class="card-body">
                                     <i class="fa fa-users fa-2x" aria-hidden="true"></i>
@@ -44,7 +44,7 @@ if (!is_user_logged_in()) {
                     </div>
 
                     <div class="col-xs-6 col-sm-6 col-md-3 col-lg-2 p-2">
-                        <a class="text-decoration-none" href="#">
+                        <a class="text-decoration-none" href="/kontakt/">
                             <div class="card p-3 shadow bg-purple text-center border-0">
                                 <div class="card-body">
                                     <i class="fa fa-envelope fa-2x" aria-hidden="true"></i>
@@ -56,7 +56,7 @@ if (!is_user_logged_in()) {
                     </div>
 
                     <div class="col-xs-6 col-sm-6 col-md-3 col-lg-2 p-2">
-                        <a class="text-decoration-none" href="#" data-toggle="modal" data-target="#modelHELP">
+                        <a class="text-decoration-none" href="/kontakt/" data-toggle="modal" data-target="#modelHELP">
                             <div class="card p-3 shadow bg-purple text-center border-0">
                                 <div class="card-body">
                                     <i class="fa fa-question fa-2x" aria-hidden="true"></i>

@@ -233,13 +233,16 @@
             const productCount = parseInt(productRange.val());
             const orderCount = parseInt(orderRange.val());
             const productPrice = 249;
-            const commissionRate = .5;
-
+            const commissionRate = 0.5;
+        
             const totalRevenue = productCount * productPrice * orderCount;
             const commission = totalRevenue * commissionRate;
             const profit = totalRevenue - commission;
-            profitResult.text(`${profit.toFixed()}` + ' ' + profitResult.data('currency'));
+        
+            // Use Math.floor() to round down the profit
+            profitResult.text(`${Math.floor(profit)}` + ' ' + profitResult.data('currency'));
         }
+        
 
         productRange.on('input change', function () {
             htmlInputRange.inputChange($(this));
