@@ -26,7 +26,7 @@ if (!is_user_logged_in()) {
                 <div class="row justify-content-center align-items-center">
                     <div class="col-md-11 py-5">
                         <div class="signup-page">
-                            <form method="post" action="" id="resellerRegistrationForm">
+                            <form method="post" action="" id="memberRegistrationForm">
                                 <div id="success-message" class="bg-success text-white p-3 my-2"><span class=" text-white"></span></div>
                                 <div id="error-message" class="bg-danger text-white p-3 my-2"><span class=" text-white"></span></div>
                                 <input type="hidden" id="reseller_id" name="reseller_id" value="<?php echo $reseller_id; ?>">

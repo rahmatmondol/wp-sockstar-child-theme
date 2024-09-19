@@ -78,7 +78,7 @@ function custom_login()
     }
 }
 
-//registration for reseller , team
+//registration for team
 add_action('wp_ajax_shocks_user_registration', 'shocks_member_registration');
 add_action('wp_ajax_nopriv_shocks_user_registration', 'shocks_member_registration');
 
@@ -142,7 +142,7 @@ function shocks_member_registration()
     $user_id = wp_insert_user(array(
         'user_login' => sanitize_title($user_login),
         'user_email' => $email,
-        'user_pass'  => $password, 
+        'user_pass'  => $password,
         'first_name' => $fullName,
         'role'       => $role,
     ));
@@ -174,8 +174,11 @@ function shocks_member_registration()
     )));
 }
 
+//registration for reseller
+add_action('wp_ajax_shocks_reseller_registration', 'shocks_reseller_registration');
+add_action('wp_ajax_nopriv_shocks_reseller_registration', 'shocks_reseller_registration');
 
-function shocks_reseler_registration()
+function shocks_reseller_registration()
 {
     check_ajax_referer('socks-nonce', 'security');
     $register_type = $_POST['register_type'];
@@ -185,27 +188,17 @@ function shocks_reseler_registration()
     endif;
     // var_dump($_POST);
     // exit();
-    // $address            = sanitize_text_field($_POST['Address']);
-    // $zip_code           = sanitize_text_field($_POST['zipCode']);
-    // $postal_address     = sanitize_text_field($_POST['PostalAddress']);
-    // $email_repeat       = sanitize_email($_POST['EmailAddressRepeat']);
-    // $confirmPassword    = $_POST['confirmPassword'];
-    // $bank_name          = $_POST['bank_name'];
-    // $account_number     = $_POST['account_number'];
-    // $phone_number = sanitize_text_field($_POST['PhoneNumber']);
-
     $fullName           = sanitize_text_field($_POST['fullName']);
-    $email              = sanitize_email($_POST['email']);
+    $address            = sanitize_text_field($_POST['Address']);
+    $zip_code           = sanitize_text_field($_POST['zipCode']);
+    $postal_address     = sanitize_text_field($_POST['PostalAddress']);
+    $email              = sanitize_email($_POST['EmailAddress']);
+    $email_repeat       = sanitize_email($_POST['EmailAddressRepeat']);
     $password           = $_POST['password'];
-
-    // Check if required fields are empty
-    if (empty($email)) {
-        wp_send_json_error(array('message' => __('Email is required.', 'hello-elementor')));
-    }
-    if (empty($password)) {
-        wp_send_json_error(array('message' => __('Password is required.', 'hello-elementor')));
-    }
-
+    $confirmPassword    = $_POST['confirmPassword'];
+    $bank_name          = $_POST['bank_name'];
+    $account_number     = $_POST['account_number'];
+    // $phone_number = sanitize_text_field($_POST['PhoneNumber']);
     if ($register_type == 'reseller') :
         // Get the user data from the AJAX request
         $user_type      = sanitize_text_field($_POST['userType']);
@@ -213,45 +206,34 @@ function shocks_reseler_registration()
         $role           = 'reseller';
 
         // Check if required fields are empty
-        if (empty($user_type) || empty($team_name) || empty($email)) {
+        if (empty($user_type) || empty($team_name) || empty($address) || empty($zip_code) || empty($postal_address) || empty($email) || empty($email_repeat)) {
             wp_send_json_error(array('message' => __('All fields are required.', 'hello-elementor')));
         }
-        $suc_msg = __('Your registration is pending approval.', 'hello-elementor');
+        $suc_msg = 'Your registration is pending approval.';
     elseif ($register_type == 'team') :
         $reseller_id    = sanitize_text_field($_POST['reseller_id']);
         $role           = 'subscriber';
-        $suc_msg        = __('Your registration is successful.', 'hello-elementor');
+        $suc_msg        = 'Your registration is successful.';
     endif;
 
     // Check if email and repeated email match
-    // if ($email !== $email_repeat) {
-    //     wp_send_json_error(array('message' => __('Emails do not match.', 'hello-elementor')));
-    // }
-
+    if ($email !== $email_repeat) {
+        wp_send_json_error(array('message' => __('Emails do not match.', 'hello-elementor')));
+    }
     // Check if email already exist
     if (email_exists($email)) {
         wp_send_json_error(array('message' => __('Email already exist.Please try with different email.', 'hello-elementor')));
     }
-
     // Check if email and repeated email match
-    // if ($password !== $confirmPassword) {
-    //     wp_send_json_error(array('message' => __('Password do not match.', 'hello-elementor')));
-    // }
-
-
-
-    // Check registration type is reseller or team member
-    if ($register_type == 'reseller') {
-        $user_login = $team_name;
-    } else {
-        $user_login = $fullName;
+    if ($password !== $confirmPassword) {
+        wp_send_json_error(array('message' => __('Password do not match.', 'hello-elementor')));
     }
 
     // Create a user with the 'reseller' role
     $user_id = wp_insert_user(array(
-        'user_login' => sanitize_title($user_login),
+        'user_login' => sanitize_title($team_name),
         'user_email' => $email,
-        'user_pass' => wp_hash_password($password),
+        'user_pass' => $password,
         'first_name' => $fullName, // Add first name if needed
         'role' => $role,
     ));
@@ -269,12 +251,12 @@ function shocks_reseler_registration()
         elseif ($register_type == 'team') :
             update_user_meta($user_id, 'reseller_id', $reseller_id);
         endif;
-    // Update user meta with additional information
-    // update_user_meta($user_id, 'address', $address);
-    // update_user_meta($user_id, 'zip_code', $zip_code);
-    // update_user_meta($user_id, 'postal_address', $postal_address);
-    // update_user_meta($user_id, 'bank_name', $bank_name);
-    // update_user_meta($user_id, 'account_number', $account_number);
+        // Update user meta with additional information
+        update_user_meta($user_id, 'address', $address);
+        update_user_meta($user_id, 'zip_code', $zip_code);
+        update_user_meta($user_id, 'postal_address', $postal_address);
+        update_user_meta($user_id, 'bank_name', $bank_name);
+        update_user_meta($user_id, 'account_number', $account_number);
     // update_user_meta($user_id, 'phone_number', $phone_number);
 
     // // Call the socks_get_email_template filter
@@ -285,10 +267,8 @@ function shocks_reseler_registration()
     $userdata = [
         'register_type'     => $register_type,
         'redirect_url' => ($register_type == 'reseller') ? ' ' : site_url('/login'),
-        'password' => $password,
-        'user_pass' => wp_hash_password($password),
     ];
-    wp_send_json_success(array('message' => $suc_msg, 'data' => $userdata));
+    wp_send_json_success(array('message' => __($suc_msg, 'hello-elementor'), 'data' => $userdata));
 }
 
 function socks_cover_profile_images()

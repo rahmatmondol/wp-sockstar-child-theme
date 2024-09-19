@@ -38,7 +38,8 @@
             icon.toggleClass('fa-eye-slash fa-eye');
         });
 
-        $('#resellerRegistrationForm').on('submit', function (e) {
+        // member registration
+        $('#memberRegistrationForm').on('submit', function (e) {
             e.preventDefault();
             // Reset previous error messages
             $('.error-message').remove();
@@ -51,19 +52,85 @@
                 'password': $('#password').val(),
                 'reseller_id': $('#reseller_id').val(),
                 'register_type': $('#register_type').val(),
-                // 'TeamName': $('#TeamName').val(),
-                // 'Address': $('#Address').val(),
-                // 'zipCode': $('#zipCode').val(),
-                // 'PostalAddress': $('#PostalAddress').val(),
-                // 'EmailAddressRepeat': $('#EmailAddressRepeat').val(),
-                // 'confirmPassword': $('#confirmPassword').val(),
-                // 'bank_name': $('#bank_name').val(),
-                // 'account_number': $('#account_number').val(),
-                // 'PhoneNumber': $('#PhoneNumber').val(),
                 'security': ajax_object.nonce,
             };
 
-            console.log(data);
+            // Validate fields
+            var isValid = true;
+
+            $.each(data, function (key, value) {
+                if (value === '' || value === null) {
+                    isValid = false;
+                    $('#' + key).after('<div class="error-message">This field is required</div>');
+                }
+            });
+
+            // Proceed with Ajax request if all validations pass
+            if (isValid) {
+                $.ajax({
+                    type: 'POST',
+                    url: ajax_object.ajax_url,
+                    data: data,
+                    beforeSend: function () {
+                        // Show loading spinner or disable the submit button
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        // Scroll to the top of the form
+                        const formTop = $('#memberRegistrationForm').offset().top;
+                        $('html, body').animate({
+                            scrollTop: formTop - 20
+                        }, 500);
+
+                        if (response.success) {
+                            $('#success-message').text(response.data.message).show();
+                            if (response.data.data.register_type == 'team') {
+                                // window.location.href = response.data.data.redirect_url;
+                            }
+                            // You can clear the form or perform any other actions here
+                            $('#error-message').text(response.data.message).hide(); // Show error message above the form
+                        } else {
+                            $('#success-message').text(response.data.message).hide();
+                            $('#error-message').text(response.data.message).show(); // Show error message above the form
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        // Handle Ajax errors
+                        console.log(jqXHR.responseText); // Log the detailed error message
+                        $('#error-message').text('An error occurred. Please try again.').show(); // Show a generic error message
+                    },
+                    complete: function () {
+                        // Hide loading spinner or enable the submit button
+                    }
+                });
+            }
+        });
+
+        //reseler registration
+        $('#resellerRegistrationForm').on('submit', function (e) {
+            e.preventDefault();
+            // Reset previous error messages
+            $('.error-message').remove();
+
+            var data = {
+                'action': 'shocks_reseller_registration',
+                'userType': $('#userType').val(),
+                'fullName': $('#fullName').val(),
+                'TeamName': $('#TeamName').val(),
+                'Address': $('#Address').val(),
+                'zipCode': $('#zipCode').val(),
+                'PostalAddress': $('#PostalAddress').val(),
+                'EmailAddress': $('#EmailAddress').val(),
+                'EmailAddressRepeat': $('#EmailAddressRepeat').val(),
+                'password': $('#password').val(),
+                'confirmPassword': $('#confirmPassword').val(),
+                'reseller_id': $('#reseller_id').val(),
+                'register_type': $('#register_type').val(),
+                'bank_name': $('#bank_name').val(),
+                'account_number': $('#account_number').val(),
+                // 'PhoneNumber': $('#PhoneNumber').val(),
+                'security': ajax_object.nonce,
+            };
 
             // Validate fields
             var isValid = true;
@@ -76,10 +143,10 @@
             });
 
             // Additional validation (e.g., email matching)
-            // if (data.Email !== data.EmailRepeat) {
-            //     isValid = false;
-            //     $('#EmailAddressRepeat').after('<div class="error-message">Emails do not match</div>');
-            // }
+            if (data.Email !== data.EmailRepeat) {
+                isValid = false;
+                $('#EmailAddressRepeat').after('<div class="error-message">Emails do not match</div>');
+            }
 
             // Proceed with Ajax request if all validations pass
             if (isValid) {
