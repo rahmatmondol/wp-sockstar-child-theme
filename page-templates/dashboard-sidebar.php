@@ -1,29 +1,26 @@
 <!-- sidebar -->
-<?php
-$reseller_id = get_current_user_id();
-$reseller_meta_data = get_user_meta($reseller_id);
-$user_type = isset($reseller_meta_data['reseller_id'][0]) ? $reseller_meta_data['reseller_id'][0] : false;
-$rols = $current_user->roles[0];
+<style>
+    #user-header {
+        display: none !important;
+    }
 
-if ($user_type) : ?>
-    <style>
-        #user-header {
-            display: none !important;
-        }
-    </style>
-<?php elseif ($rols == 'reseller'): ?>
-    <style>
-        #user-header {
-            display: none !important;
-        }
-    </style>
-<?php else: ?>
-    <style>
+    #team-header {
+        display: block;
+    }
+
+    /* sidebar for small screens */
+    @media screen and (min-width: 767px)  {
         #team-header {
-            display: none !important;
+            display: none;
+            /* Hides the element with the id 'team-header' */
         }
-    </style>
-<?php endif; ?>
+
+        #user-header {
+            display: none;
+            /* Hides the element with the id 'user-header' */
+        }
+    }
+</style>
 
 
 <div class="col-md-3 col-lg-2 px-0 vh-50 bg-white shadow-sm sidebar" id="sidebar">

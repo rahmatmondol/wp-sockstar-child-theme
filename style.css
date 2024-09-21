@@ -7,7 +7,7 @@ Author URI: https://elementor.com/?utm_source=wp-themes&utm_campaign=author-uri&
 Text Domain: hello-elementor
 Description: A lightweight and minimalist WordPress theme for Elementor page builder.
 Tags: accessibility-ready,flexible-header,custom-colors,custom-menu,custom-logo,featured-images,rtl-language-support,threaded-comments,translation-ready
-Version: 4.0
+Version: 7.0
 Updated: 09/19/2024
 */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
@@ -20,6 +20,8 @@ Updated: 09/19/2024
 #error-message {
     display: none;
 }
+
+
 
 /* reseller profile page */
 
@@ -441,14 +443,10 @@ Updated: 09/19/2024
     }
 }
 
-/* sidebar for small screens */
-@media screen and (min-width: 767px) and (max-width: 1025px) {
-    #team-header {
-        display: none;  /* Hides the element with the id 'team-header' */
-    }
-    #user-header {
-        display: none;  /* Hides the element with the id 'user-header' */
-    }
+
+
+#team-header {
+    display: none;
 }
 
 #sidebar-action {
