@@ -1,9 +1,38 @@
 <!-- sidebar -->
+<?php
+$reseller_id = get_current_user_id();
+$reseller_meta_data = get_user_meta($reseller_id);
+$user_type = isset($reseller_meta_data['reseller_id'][0]) ? $reseller_meta_data['reseller_id'][0] : false;
+$rols = $current_user->roles[0];
+
+if ($user_type) : ?>
+    <style>
+        #user-header {
+            display: none !important;
+        }
+    </style>
+<?php elseif ($rols == 'reseller'): ?>
+    <style>
+        #user-header {
+            display: none !important;
+        }
+    </style>
+<?php else: ?>
+    <style>
+        #team-header {
+            display: none !important;
+        }
+    </style>
+<?php endif; ?>
+
+
 <div class="col-md-3 col-lg-2 px-0 vh-50 bg-white shadow-sm sidebar" id="sidebar">
+    <div id="sidebar-close">
+        X
+    </div>
     <span class="px-3 py-2">
         <?php
         echo __('Username:', 'hello-elementor') . esc_html($current_user->user_login) . '<br />';
-        $rols = $current_user->roles[0];
         ?>
     </span>
     <div class="list-group rounded-0">
@@ -83,4 +112,4 @@
     </div>
 </div>
 <!-- overlay to close sidebar on small screens -->
-<div class="w-100 vh-100 position-fixed overlay d-none" id="sidebar-overlay"></div>
+<div class="w-100 vh-100 position-fixed overlay" id="sidebar-overlay" style="display: none;"></div>

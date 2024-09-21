@@ -63,11 +63,11 @@ if (!is_user_logged_in()) {
     <div class="container-fluid user-dashboard">
         <div class="row">
             <?php include_once get_stylesheet_directory() . '/page-templates/dashboard-sidebar.php'; ?>
-            <div class="col-md-9 col-lg-10 ml-md-auto px-0">
+            <div class="col-md-9 col-lg-10 ml-md-auto">
                 <div class="row justify-content-center align-items-center">
-                    <div class="col-md-11 py-5">
+                    <div class="col-md-11 py-5" style="overflow: auto;">
 
-                        <table class="table caption-top">
+                        <table class="table-responsive caption-top">
                             <caption><?php echo __('List of Orders', 'hello-elementor'); ?></caption>
                             <thead>
                                 <tr>

@@ -234,15 +234,15 @@
             const orderCount = parseInt(orderRange.val());
             const productPrice = 249;
             const commissionRate = 0.5;
-        
+
             const totalRevenue = productCount * productPrice * orderCount;
             const commission = totalRevenue * commissionRate;
             const profit = totalRevenue - commission;
-        
+
             // Use Math.floor() to round down the profit
             profitResult.text(`${Math.floor(profit)}` + ' ' + profitResult.data('currency'));
         }
-        
+
 
         productRange.on('input change', function () {
             htmlInputRange.inputChange($(this));
@@ -257,6 +257,23 @@
         htmlInputRange.init();
         updateProfit(); // Call updateProfit to initialize the profit display with default values
         // profit calculator js end
+
+
+        $('body').on('click', '#sidebar-action', function () {
+            $('#sidebar-overlay').show('slow');
+            document.getElementById('sidebar').style.transform = 'translateX(0%)';
+        })
+
+        $('body').on('click', '#sidebar-overlay', function () {
+            document.getElementById('sidebar').style.transform = 'translateX(-100%)';
+            $('#sidebar-overlay').hide('slow');
+        })
+
+        $('body').on('click', '#sidebar-close', function () {
+            document.getElementById('sidebar').style.transform = 'translateX(-100%)';
+            $('#sidebar-overlay').hide('slow');
+        })
+
     });
 
     //cover photo and profile photos ajax

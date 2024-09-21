@@ -386,6 +386,19 @@ Updated: 09/19/2024
 .user-dashboard .overlay {
     background-color: rgb(0 0 0 / 45%);
     z-index: 99;
+    top: 0;
+}
+
+#sidebar-close {
+    position: absolute;
+    right: 0px;
+    background: #f00;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    display: none;
 }
 
 .user-dashboard .vh-50 {
@@ -415,11 +428,31 @@ Updated: 09/19/2024
         max-width: 18rem;
         transform: translateX(-100%);
         transition: transform 0.4s ease-out;
+        position: fixed;
+        height: 100vh !important;
     }
 
     .user-dashboard .sidebar.active {
         transform: translateX(0);
     }
+
+    #sidebar-close {
+        display: block;
+    }
+}
+
+/* sidebar for small screens */
+@media screen and (min-width: 767px) and (max-width: 1025px) {
+    #team-header {
+        display: none;  /* Hides the element with the id 'team-header' */
+    }
+    #user-header {
+        display: none;  /* Hides the element with the id 'user-header' */
+    }
+}
+
+#sidebar-action {
+    cursor: pointer;
 }
 
 .woocommerce-account .page-header .entry-title {

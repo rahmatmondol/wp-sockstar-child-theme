@@ -13,6 +13,7 @@ if (!is_user_logged_in()) {
     $reseller_id = get_current_user_id();
     $reseller_meta_data = get_user_meta($reseller_id);
     $user_type = isset($reseller_meta_data['reseller_id'][0]) ? $reseller_meta_data['reseller_id'][0] : false;
+
     $team_name = isset($reseller_meta_data['team_name'][0]) ? $reseller_meta_data['team_name'][0] : '';
     $shop_name = isset($reseller_meta_data['shop_name'][0]) ? $reseller_meta_data['shop_name'][0] : '';
     // Get users with reseller_id and usermeta field 'wp'
@@ -108,11 +109,11 @@ if (!is_user_logged_in()) {
     <div class="container-fluid user-dashboard">
         <div class="row">
             <?php include_once get_stylesheet_directory() . '/page-templates/dashboard-sidebar.php'; ?>
-            <div class="col-md-9 col-lg-10 ml-md-auto px-0">
+            <div class="col-md-9 col-lg-10 ml-md-auto">
                 <div class="row justify-content-center align-items-center">
                     <div class="col-md-11 py-5">
                         <div class="row header_info">
-                            <div class="col"><?php echo __('Products Sold: ', 'hello-elementor') . $order_count; ?></div>
+                            <div class="col"><?php echo __('Total Products Sold: ', 'hello-elementor') . $order_count; ?></div>
                             <div class="col"><?php echo __('Total Earned: ', 'hello-elementor') . wc_price(floor($total_sold_price / 2)); ?></div>
                             <div class="col" id="countdown" data-countdown-date="<?php echo esc_attr($countdown_date); ?>"></div>
                         </div>
@@ -124,7 +125,7 @@ if (!is_user_logged_in()) {
                                         <th scope="col">#</th>
                                         <th scope="col"><?php echo __('Name', 'hello-elementor'); ?></th>
                                         <th scope="col"><?php echo __('Products Sold', 'hello-elementor'); ?></th>
-                                        <th scope="col"><?php echo __('Total Earned', 'hello-elementor'); ?></th>
+                                        <th scope="col"><?php echo __('Total Earning', 'hello-elementor'); ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -166,7 +167,7 @@ if (!is_user_logged_in()) {
 
             const countdownDate = countdownElement.getAttribute('data-countdown-date');
 
-            if(!countdownDate) {
+            if (!countdownDate) {
                 countdownElement.style.display = "none";
             }
 
@@ -189,7 +190,7 @@ if (!is_user_logged_in()) {
     <style>
         .header_info .col {
             text-align: center;
-            font-size: 28px;
+            font-size: 100%;
             background: #ddd;
             padding: 10px;
             font-weight: 600;
