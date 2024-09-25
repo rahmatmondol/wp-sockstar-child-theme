@@ -9,7 +9,7 @@
     }
 
     /* sidebar for small screens */
-    @media screen and (min-width: 767px)  {
+    @media screen and (min-width: 767px) {
         #team-header {
             display: none;
             /* Hides the element with the id 'team-header' */
@@ -27,9 +27,11 @@
     <div id="sidebar-close">
         X
     </div>
+
     <span class="px-3 py-2">
         <?php
         echo __('Username:', 'hello-elementor') . esc_html($current_user->user_login) . '<br />';
+        $rols = $current_user->roles;
         ?>
     </span>
     <div class="list-group rounded-0">
@@ -38,7 +40,7 @@
             <i class="fa fa-th-large"></i>
             <span class="ml-2"><?php echo __('Dashboard', 'hello-elementor'); ?></span>
         </a>
-        <?php if ($rols == 'reseller'): ?>
+        <?php if (in_array('administrator', $rols) || in_array('reseller', $rols)): ?>
             <a href="<?php echo site_url('/user/shop-settings'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($reseller_shopsettings) ? 'active' : ''; ?>">
                 <i class="fa-solid fa-shop"></i>
                 <span class="ml-2"><?php echo __('Shop Settings', 'hello-elementor'); ?></span>
@@ -52,7 +54,7 @@
             <i class="fa fa-box"></i>
             <span class="ml-2"><?php echo __('Scoreboard', 'hello-elementor'); ?></span>
         </a>
-        <?php if ($rols == 'reseller'): ?>
+        <?php if (in_array('administrator', $rols) || in_array('reseller', $rols)): ?>
             <a href="<?php echo site_url('/user/team-members'); ?>" class="list-group-item list-group-item-action border-0 align-items-center <?php echo ($team_members) ? 'active' : ''; ?>">
                 <i class="fa fa-box"></i>
                 <span class="ml-2"><?php echo __('Members', 'hello-elementor'); ?></span>
