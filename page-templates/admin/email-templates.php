@@ -23,7 +23,8 @@ if (isset($_POST['email_template'])) {
                     <div class="form-group">
                         <label class="d-block" for="email-templates">Select Template</label>
                         <select class="form-control select2" name="templateId" id="email-templates">
-                            <option value="signup-email" selected>Signup Reseller Email</option>
+                            <option value="signup-reseller-email" selected>Signup Reseller Email</option>
+                            <option value="signup-member-email" selected>Signup member Email</option>
                             <option value="welcome-reseller-email">Welcome Reseller Email</option>
                             <option value="sales-period-close">Sales Period Close</option>
                             <option value="halfway-sales-reminder">Halfway sales reminder</option>
@@ -43,7 +44,7 @@ if (isset($_POST['email_template'])) {
                     <div class="form-group row">
                         <label for="inputEmail3" class="font-weight-bold col-sm-2 col-form-label">Variables :</label>
                         <div class="col-sm-10 font-weight-bold">
-                            {{username}}, {{first_name}}, {{last_name}}, {{full_name}}, {{email}}, {{admin_email}}, {{site_url}}
+                            {{username}}, {{first_name}}, {{last_name}}, {{full_name}}, {{email}}, {{admin_email}}, {{site_url}} , {{referral_link}}
                         </div>
                     </div>
                     <div class="form-group">

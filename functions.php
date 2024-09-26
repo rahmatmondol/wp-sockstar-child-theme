@@ -311,6 +311,15 @@ if (!function_exists('socks_send_email_template')) {
             $first_name = get_user_meta($user_id, 'first_name', true);
             $last_name  = get_user_meta($user_id, 'last_name', true);
             // Define user data (you need to replace these with actual user data)
+
+            $reseller_id = get_usermeta($user_id, 'reseller_id', true);
+            if ($reseller_id) {
+                $get_reseler_data   = get_userdata($reseller_id);
+                $reseler            = $get_reseler_data->user_login;
+            } else {
+                $reseler = '';
+            }
+
             $user_info = array(
                 '{{username}}'      => $user_data->user_login,
                 '{{first_name}}'    => $first_name,
@@ -319,6 +328,7 @@ if (!function_exists('socks_send_email_template')) {
                 '{{email}}'         => $user_data->user_email,
                 '{{admin_email}}'   => $admin_email,
                 '{{site_url}}'      => site_url(),
+                '{{referral_link}}' => site_url('lag/' . $reseler . '/' . $user_data->user_login)
             );
         }
 

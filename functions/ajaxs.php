@@ -165,7 +165,7 @@ function shocks_member_registration()
     }
 
     // Trigger the email action
-    do_action('socks_send_email_template_action', 'signup-email', $user_id, true);
+    do_action('socks_send_email_template_action', 'signup-member-email', $user_id, true);
 
     // Return success response
     wp_send_json_success(array('message' => $success_message, 'data' => array(
@@ -242,7 +242,7 @@ function shocks_reseller_registration()
         wp_send_json_error(array('message' => $user_id->get_error_message()));
     else :
         //send email for signup users with do action 
-        do_action('socks_send_email_template_action', 'signup-email', $user_id, true);
+        do_action('socks_send_email_template_action', 'signup-reseller-email', $user_id, true);
 
         if ($register_type == 'reseller') :
             update_user_meta($user_id, 'user_type', $user_type);
