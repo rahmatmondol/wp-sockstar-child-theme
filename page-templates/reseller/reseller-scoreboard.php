@@ -113,8 +113,8 @@ if (!is_user_logged_in()) {
                 <div class="row justify-content-center align-items-center">
                     <div class="col-md-11 py-5">
                         <div class="row header_info">
-                            <div class="col"><?php echo __('Total Products Sold: ', 'hello-elementor') . $order_count; ?></div>
-                            <div class="col"><?php echo __('Total Earned: ', 'hello-elementor') . wc_price(floor($total_sold_price / 2)); ?></div>
+                            <div class="col"><?php echo __('Produkter sålda: ', 'hello-elementor') . $order_count; ?></div>
+                            <div class="col"><?php echo __('Totalt intjänat: ', 'hello-elementor') . wc_price(floor($total_sold_price / 2)); ?></div>
                             <div class="col" id="countdown" data-countdown-date="<?php echo esc_attr($countdown_date); ?>"></div>
                         </div>
                         <div class="table-responsive">
@@ -125,7 +125,7 @@ if (!is_user_logged_in()) {
                                         <th scope="col">#</th>
                                         <th scope="col"><?php echo __('Name', 'hello-elementor'); ?></th>
                                         <th scope="col"><?php echo __('Products Sold', 'hello-elementor'); ?></th>
-                                        <th scope="col"><?php echo __('Total Earning', 'hello-elementor'); ?></th>
+                                        <th scope="col"><?php echo __('Intjänat', 'hello-elementor'); ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>

@@ -49,12 +49,16 @@ if (!is_user_logged_in()) {
                                         <span class="error-msg" style="color: red;"></span>
                                     </div>
                                     <div class="form-group col-md-6 order-1 order-md-0">
-                                        <label for="password"><?php _e('Set Password', 'hello-elementor'); ?></label>
-                                        <div class="input-group mb-3">
-                                            <input type="password" class="form-control" id="password" name="password" placeholder="<?php echo __('Password', 'hello-elementor'); ?>" aria-label="<?php echo __('Password', 'hello-elementor'); ?>" aria-describedby="password">
-                                            <span class="input-group-text showHidePassword"><i class="fa-solid fa-eye-slash"></i></span>
-                                        </div>
-                                    </div>
+    <label for="password"><?php _e('Lösenord', 'hello-elementor'); ?></label>
+    <div class="input-group mb-3">
+        <input type="password" class="form-control" id="password" name="password" placeholder="<?php echo __('Password', 'hello-elementor'); ?>" aria-label="<?php echo __('Password', 'hello-elementor'); ?>" aria-describedby="password">
+        <span class="input-group-text showHidePassword"><i class="fa-solid fa-eye-slash"></i></span>
+    </div>
+    <!-- Lägg till texten här under lösenordsfältet -->
+    <p style="color: grey; font-size: 14px; margin-top: -10px;">
+        <?php echo __('Välj ett lösenord som alla kan börja med ex: vi123</br>säljaren kan ändra sitt lösenord senare om hen vill.', 'hello-elementor'); ?>
+    </p>
+</div>
 
                                 </div>
 
@@ -62,11 +66,8 @@ if (!is_user_logged_in()) {
                                     <div class="col-md-12">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <button class="btn theme-bg-primary btn-block"><?php _e('Complete registration', 'hello-elementor'); ?></button>
+                                                <button class="btn theme-bg-primary btn-block"><?php _e('Skapa användare', 'hello-elementor'); ?></button>
                                             </div>
-                                        </div>
-                                        <div class="col-md-12 mt-3 text-center">
-                                            <?php _e('When you have completed the registration, you will receive an email with a link to My Pages, where the group can easily manage their sales and share their own online shop', 'hello-elementor'); ?>
                                         </div>
                                     </div>
                                 </div>

@@ -189,7 +189,14 @@ if (!is_user_logged_in()) {
                                 <textarea type="text" name="shop_description" class="form-control" id="shop_description"><?php echo $shop_description; ?></textarea>
                                 <p class="pt-2"><span class="fw-bold">Exempel på text:</span> Stöd vår resa till Gothia Cup och Liseberg genom att köpa våra strumpor! Varje bidrag är viktigt för att uppfylla vår dröm och ge vårt lag ett minne för livet. Tack för ert stöd och ert förtroende. Tillsammans erövrar vi Gothia Cup och utforskar Göteborg. Med vänliga hälsningar, Fotbollslaget IK.</p>
                             </div>
-                            <h3 class="py-4 text-center fw-bold"><?php echo __('Use your own material', 'hello-elementor'); ?></h3>
+								<h3 class="py-4 text-center fw-bold"><?php echo __('Använd ditt eget material', 'hello-elementor'); ?></h3>
+
+									<p class="text-center" style="margin-top:-1rem; margin-bottom: 2rem;"><?php echo __('För optimal bildkvalitet följ dessa riktlinjer:', 'hello-elementor'); ?></br>
+									<b><?php echo __('Profilbild:', 'hello-elementor'); ?></b> 500px X 500px
+									<b><?php echo __('Omslagsbild:', 'hello-elementor'); ?></b> 1000px X 300px
+									</p>
+
+</p>
                             <div class="mb-3 row">
                                 <div class="col-md-6 col-12 text-center">
                                     <label class="d-block pb-3"><?php echo __('Upload a Profile', 'hello-elementor'); ?></label>
@@ -250,10 +257,10 @@ if (!is_user_logged_in()) {
 
 
                             <div class="text-center pt-5">
-                                <h3><?php echo __('About our funding', 'hello-elementor'); ?></h3>
+                                <h3><?php echo __('', 'hello-elementor'); ?></h3>
                                 <p class="bw-profile-description"><?php echo $shop_description; ?></p>
                                 <div class=" mt-3">
-                                    <button type="submit" class="btn text-white sock-primary-bg-color px-4 py-2" name="submit"><?php echo __('submit', 'hello-elementor'); ?></button>
+                                    <button type="submit" class="btn text-white sock-primary-bg-color px-4 py-2" name="submit"><?php echo __('Slutför', 'hello-elementor'); ?></button>
                                 </div>
 
                             </div>
@@ -310,7 +317,7 @@ get_footer();
 
 
         // profile photo image preview
-
+		
 
         var elements = document.querySelectorAll('.socks-profile-bg-color');
         elements.forEach(function(element) {

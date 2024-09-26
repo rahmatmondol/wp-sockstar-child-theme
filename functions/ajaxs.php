@@ -135,7 +135,7 @@ function shocks_member_registration()
         }
 
         $user_login = $fullName;
-        $success_message = __('Your registration is successful.', 'hello-elementor');
+        $success_message = __('Ny användare skapad.', 'hello-elementor');
     }
 
     // Insert the user into the database
