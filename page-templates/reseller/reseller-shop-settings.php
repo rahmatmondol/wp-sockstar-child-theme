@@ -189,14 +189,14 @@ if (!is_user_logged_in()) {
                                 <textarea type="text" name="shop_description" class="form-control" id="shop_description"><?php echo $shop_description; ?></textarea>
                                 <p class="pt-2"><span class="fw-bold">Exempel på text:</span> Stöd vår resa till Gothia Cup och Liseberg genom att köpa våra strumpor! Varje bidrag är viktigt för att uppfylla vår dröm och ge vårt lag ett minne för livet. Tack för ert stöd och ert förtroende. Tillsammans erövrar vi Gothia Cup och utforskar Göteborg. Med vänliga hälsningar, Fotbollslaget IK.</p>
                             </div>
-								<h3 class="py-4 text-center fw-bold"><?php echo __('Använd ditt eget material', 'hello-elementor'); ?></h3>
+                            <h3 class="py-4 text-center fw-bold"><?php echo __('Använd ditt eget material', 'hello-elementor'); ?></h3>
 
-									<p class="text-center" style="margin-top:-1rem; margin-bottom: 2rem;"><?php echo __('För optimal bildkvalitet följ dessa riktlinjer:', 'hello-elementor'); ?></br>
-									<b><?php echo __('Profilbild:', 'hello-elementor'); ?></b> 500px X 500px
-									<b><?php echo __('Omslagsbild:', 'hello-elementor'); ?></b> 1000px X 300px
-									</p>
+                            <p class="text-center" style="margin-top:-1rem; margin-bottom: 2rem;"><?php echo __('För optimal bildkvalitet följ dessa riktlinjer:', 'hello-elementor'); ?></br>
+                                <b><?php echo __('Profilbild:', 'hello-elementor'); ?></b> 500px X 500px
+                                <b><?php echo __('Omslagsbild:', 'hello-elementor'); ?></b> 1000px X 300px
+                            </p>
 
-</p>
+                            </p>
                             <div class="mb-3 row">
                                 <div class="col-md-6 col-12 text-center">
                                     <label class="d-block pb-3"><?php echo __('Upload a Profile', 'hello-elementor'); ?></label>
@@ -242,15 +242,15 @@ if (!is_user_logged_in()) {
 
                             <div class="profile-main">
                                 <div class="position-relative">
-                                    <!-- <div id="profile-banner-image" class="position-relative overflow-hidden demo-profile-cover-photos">
+                                    <div id="profile-banner-image" class="position-relative overflow-hidden demo-profile-cover-photos">
                                         <img src="<?php echo !empty($shop_cover_img_src) ? $shop_cover_img_src : 'https://imagizer.imageshack.com/img921/9628/VIaL8H.jpg'; ?>" class="img-fluid">
-                                    </div> -->
+                                    </div>
                                     <div id="profile-d" class="text-light">
-                                        <div id="profile-pic" class="mb-3 demo-profile-profile-photos">
+                                        <div id="profile-pic" class="mb-3 demo-profile-profile-photos" style="width: 160px;height: 160px;position: absolute;bottom: 52px;">
                                             <img src="<?php echo !empty($shop_profile_img_src) ? $shop_profile_img_src : 'https://imagizer.imageshack.com/img921/3072/rqkhIb.jpg" class="img-fluid rounded-circle'; ?>" class="img-fluid">
 
                                         </div>
-                                        <div id="u-name" style="color: <?php echo $bgColorProfile; ?>;"><?php echo esc_html($shop_name); ?></div>
+                                        <div id="u-name" style="color: <?php echo $bgColorProfile; ?>;" style="top: -5em;"><?php echo esc_html($shop_name); ?></div>
                                     </div>
                                 </div>
                             </div>
@@ -317,7 +317,7 @@ get_footer();
 
 
         // profile photo image preview
-		
+
 
         var elements = document.querySelectorAll('.socks-profile-bg-color');
         elements.forEach(function(element) {
